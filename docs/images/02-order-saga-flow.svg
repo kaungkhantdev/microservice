@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="680" viewBox="0 0 1260 680">
+<title>Project 2 - Order Saga event flow</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 2 · Saga event flow and compensations</text>
+<rect x="40" y="110" width="190" height="52" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2"/>
+<text x="135.0" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">OrderCreated</text>
+<text x="135.0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">order-service</text>
+<rect x="290" y="110" width="190" height="52" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2"/>
+<text x="385.0" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">PaymentAuthorized</text>
+<text x="385.0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">payment-service</text>
+<rect x="540" y="110" width="190" height="52" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2"/>
+<text x="635.0" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">StockReserved</text>
+<text x="635.0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">inventory-service</text>
+<rect x="790" y="110" width="190" height="52" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="885.0" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">ShipmentScheduled</text>
+<text x="885.0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">shipping-service</text>
+<rect x="917" y="103" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="946.5" y="115" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="1040" y="110" width="190" height="52" rx="10" fill="#ECEFF1" stroke="#37474F" stroke-width="2"/>
+<text x="1135.0" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">OrderCompleted</text>
+<text x="1135.0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">order-service · terminal</text>
+<rect x="1040" y="110" width="190" height="52" rx="10" fill="none" stroke="#2E7D32" stroke-width="2.4"/>
+<polyline points="230,136 290,136" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="480,136 540,136" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="730,136 790,136" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="980,136 1040,136" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="30" y="95" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#2E7D32" text-anchor="start">HAPPY PATH</text>
+<polyline points="700,110 700,78 1100,78 1100,109" fill="none" stroke="#2E7D32" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="900" y="72" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#2E7D32" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">core slice (no shipping): complete right after StockReserved</text>
+<text x="30" y="230" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#C62828" text-anchor="start">FAILURES</text>
+<polyline points="190,162 310,238" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="224" y="205" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">declined</text>
+<rect x="290" y="240" width="190" height="52" rx="10" fill="#FFCDD2" stroke="#C62828" stroke-width="2"/>
+<text x="385.0" y="262" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">PaymentFailed</text>
+<text x="385.0" y="280" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">payment-service</text>
+<polyline points="440,162 560,238" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="474" y="205" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">out of stock</text>
+<rect x="540" y="240" width="190" height="52" rx="10" fill="#FFCDD2" stroke="#C62828" stroke-width="2"/>
+<text x="635.0" y="262" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">StockUnavailable</text>
+<text x="635.0" y="280" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">inventory-service</text>
+<polyline points="690,162 810,238" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="724" y="205" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">carrier error</text>
+<rect x="790" y="240" width="190" height="52" rx="10" fill="#FFCDD2" stroke="#C62828" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="885.0" y="262" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">ShipmentFailed</text>
+<text x="885.0" y="280" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">shipping-service</text>
+<rect x="917" y="233" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="946.5" y="245" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<text x="30" y="340" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#EF6C00" text-anchor="start">COMPENSATIONS</text>
+<polyline points="635.0,292 635.0,348" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="540" y="350" width="190" height="52" rx="10" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2"/>
+<text x="635.0" y="372" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">PaymentRefunded</text>
+<text x="635.0" y="390" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">payment-service</text>
+<polyline points="885.0,292 885.0,348" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="790" y="350" width="190" height="52" rx="10" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="885.0" y="372" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">StockReleased</text>
+<text x="885.0" y="390" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">inventory-service</text>
+<rect x="917" y="343" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="946.5" y="355" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="945.0,292 1095.0,348" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1040" y="350" width="190" height="52" rx="10" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1135.0" y="372" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">PaymentRefunded</text>
+<text x="1135.0" y="390" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">payment-service</text>
+<rect x="1167" y="343" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1196.5" y="355" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="385.0,292 385.0,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="635.0,402 635.0,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="885.0,402 885.0,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1135.0,402 1135.0,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="290" y="480" width="940" height="52" rx="10" fill="#ECEFF1" stroke="#37474F" stroke-width="2"/>
+<text x="760.0" y="502" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#212121" text-anchor="middle">OrderCancelled</text>
+<text x="760.0" y="520" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">order-service · terminal · customer notified</text>
+<text x="30" y="575" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Also starts compensation (stretch): OrderCancelRequested by the customer before shipping (FR-8) and the saga timeout (FR-9).</text>
+<text x="30" y="595" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">All events are keyed by orderId, so every event of one saga lands on the same partition, in order.</text>
+<rect x="30" y="633" width="34" height="18" rx="4" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.6"/>
+<text x="72" y="647" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Success event</text>
+<rect x="185" y="633" width="34" height="18" rx="4" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"/>
+<text x="227" y="647" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Failure event</text>
+<rect x="340" y="633" width="34" height="18" rx="4" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="382" y="647" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Compensation event</text>
+<rect x="528" y="633" width="34" height="18" rx="4" fill="#ECEFF1" stroke="#37474F" stroke-width="1.6"/>
+<text x="570" y="647" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Terminal state</text>
+<rect x="690" y="633" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="732" y="647" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Dashed = stretch</text>
+</svg>

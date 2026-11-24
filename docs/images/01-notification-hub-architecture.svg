@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+<title>Project 1 - Notification Hub architecture</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 1 · Real-time Notification Hub</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Spring Boot services on Kubernetes, communicating only through Kafka topics</text>
+<rect x="180" y="80" width="1240" height="540" rx="16" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="196" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#326CE5" text-anchor="start">Kubernetes cluster (kind)</text>
+<text x="196" y="120" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">namespace: notifications (apps) · namespace: kafka (Strimzi)</text>
+<rect x="420" y="130" width="790" height="44" rx="10" fill="#FFF8EE" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="815" y="157" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#BF5B00" text-anchor="middle">Kafka cluster · Strimzi operator · 3 brokers (KRaft) · RF=3 · min.insync.replicas=2</text>
+<polyline points="540,174 540,255" fill="none" stroke="#455A64" stroke-width="1.4" stroke-dasharray="4 4"/>
+<polyline points="1060,174 1060,200" fill="none" stroke="#455A64" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="420" y="255" width="240" height="150" rx="12" fill="#FFF8EE" stroke="#FFB74D" stroke-width="1.4"/>
+<text x="540.0" y="274" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#BF5B00" text-anchor="middle">domain events</text>
+<rect x="435" y="285" width="210" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="540.0" y="306.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">users.user.events</text>
+<rect x="435" y="341" width="210" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="540.0" y="362.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">orders.order.events</text>
+<rect x="930" y="200" width="260" height="350" rx="12" fill="#FFF8EE" stroke="#FFB74D" stroke-width="1.4"/>
+<text x="1060.0" y="219" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#BF5B00" text-anchor="middle">channel commands</text>
+<rect x="945" y="230" width="230" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="1060.0" y="251.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">notifications.email.commands</text>
+<rect x="945" y="313" width="230" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1060.0" y="334.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">notifications.sms.commands</text>
+<rect x="945" y="396" width="230" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1060.0" y="417.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">notifications.push.commands</text>
+<rect x="945" y="495" width="230" height="34" rx="17.0" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"/>
+<text x="1060.0" y="516.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">notifications.dlq</text>
+<text x="1060" y="470" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">key = userId · 6 partitions</text>
+<rect x="20" y="300" width="110" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="75.0" y="326.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
+<text x="75.0" y="345.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">curl / Postman</text>
+<polyline points="130,330 215,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="172" y="352" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">POST /events</text>
+<rect x="215" y="298" width="170" height="64" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="300.0" y="319.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">event-producer</text>
+<text x="300.0" y="338.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot</text>
+<text x="300.0" y="354.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">REST + KafkaTemplate</text>
+<polyline points="385,322 435,302" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="385,338 435,358" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="645,302 695,322" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="645,358 695,338" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="695" y="285" width="200" height="90" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="795.0" y="311.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">notification-service</text>
+<text x="795.0" y="330.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · router</text>
+<text x="795.0" y="346.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">@KafkaListener → KafkaTemplate</text>
+<text x="795.0" y="361.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">preferences + templates</text>
+<path d="M720,455 A75.0,10 0 0 1 870,455 V530 A75.0,10 0 0 1 720,530 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="795.0" cy="455" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="795.0" y="486.5" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
+<text x="795.0" y="505.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">preferences · templates</text>
+<text x="795.0" y="519.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">notification status</text>
+<polyline points="795,375 795,445" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)" marker-start="url(#arrowStart)"/>
+<polyline points="895,313.4 945,247" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="895,330.0 945,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="895,346.6 945,413" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1175,247 1225,247" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1225" y="215" width="170" height="64" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1310.0" y="236.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">email-worker</text>
+<text x="1310.0" y="255.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="1310.0" y="271.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Deployment ×1–6 (scales)</text>
+<polyline points="1395,247 1450,247" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1450" y="222" width="130" height="50" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1515.0" y="243.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">SMTP stub</text>
+<text x="1515.0" y="262.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">configurable failures</text>
+<polyline points="1175,330 1225,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1225" y="298" width="170" height="64" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1310.0" y="319.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">sms-worker</text>
+<text x="1310.0" y="338.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="1310.0" y="354.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Deployment</text>
+<rect x="1332" y="291" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1361.5" y="303" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="1395,330 1450,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1450" y="305" width="130" height="50" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1515.0" y="326.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">SMS stub</text>
+<text x="1515.0" y="345.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">configurable failures</text>
+<polyline points="1175,413 1225,413" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1225" y="381" width="170" height="64" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1310.0" y="402.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">push-worker</text>
+<text x="1310.0" y="421.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="1310.0" y="437.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Deployment</text>
+<rect x="1332" y="374" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1361.5" y="386" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="1395,413 1450,413" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1450" y="388" width="130" height="50" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1515.0" y="409.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Push stub</text>
+<text x="1515.0" y="428.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">configurable failures</text>
+<polyline points="1250,445 1176,503" fill="none" stroke="#C62828" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="1250" y="470" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#C62828" text-anchor="start">retries exhausted /</text>
+<text x="1250" y="484" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#C62828" text-anchor="start">poison message</text>
+<polyline points="1340,445 1340,585 795,585 795,541" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="1060" y="579" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">workers record delivery status (FR-10)</text>
+<rect x="30" y="648" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6"/>
+<text x="72" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Spring Boot service</text>
+<rect x="225" y="648" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="267" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Stretch (optional)</text>
+<rect x="413" y="648" width="34" height="18" rx="9" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="455" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kafka topic</text>
+<rect x="555" y="648" width="34" height="18" rx="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"/>
+<text x="597" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Dead-letter topic</text>
+<rect x="737" y="648" width="34" height="18" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.6"/>
+<text x="779" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Database</text>
+<rect x="859" y="648" width="34" height="18" rx="4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="901" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">External / stub</text>
+<rect x="1028" y="648" width="34" height="18" rx="4" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1070" y="662" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kubernetes boundary</text>
+</svg>

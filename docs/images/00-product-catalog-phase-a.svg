@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="700" viewBox="0 0 1500 700">
+<title>Project 0 - Product Catalog Phase A</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 0 · Product Catalog · Phase A: classic Spring Cloud</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">docker-compose · service registry · API gateway · config server · circuit breaker</text>
+<rect x="170" y="75" width="1130" height="560" rx="16" fill="none" stroke="#546E7A" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="186" y="97" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#546E7A" text-anchor="start">docker-compose network</text>
+<text x="186" y="115" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">only the gateway port (8080) is published</text>
+<rect x="470" y="110" width="220" height="70" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2"/>
+<text x="580.0" y="134.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">discovery-server</text>
+<text x="580.0" y="153.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">Eureka · @EnableEurekaServer</text>
+<text x="580.0" y="168.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">every service registers here</text>
+<rect x="760" y="110" width="220" height="70" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="870.0" y="134.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">config-server</text>
+<text x="870.0" y="153.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">Spring Cloud Config</text>
+<text x="870.0" y="168.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">config for all services at startup</text>
+<rect x="917" y="103" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="946.5" y="115" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="1340" y="115" width="140" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1410.0" y="141.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Git repo</text>
+<text x="1410.0" y="160.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">config files</text>
+<polyline points="1340,145 981,145" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="1160" y="138" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">reads</text>
+<rect x="20" y="340" width="120" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="80.0" y="366.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
+<text x="80.0" y="385.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">browser / Postman</text>
+<polyline points="140,370 200,370" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="170" y="361" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">/api/**</text>
+<rect x="200" y="325" width="200" height="90" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="300.0" y="351.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">api-gateway</text>
+<text x="300.0" y="370.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Cloud Gateway</text>
+<text x="300.0" y="386.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">routes lb://catalog-service</text>
+<text x="300.0" y="401.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">public :8080</text>
+<polyline points="400,370 470,370" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="470" y="325" width="210" height="90" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="575.0" y="351.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">catalog-service</text>
+<text x="575.0" y="370.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST + JPA</text>
+<text x="575.0" y="386.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">builds the product page</text>
+<text x="575.0" y="401.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">OpenFeign clients</text>
+<polyline points="680,370 710,370" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="710" y="340" width="120" height="60" rx="10" fill="#FFF3E0" stroke="#EF6C00" stroke-width="2"/>
+<text x="770.0" y="366.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Resilience4j</text>
+<text x="770.0" y="385.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">timeout · breaker</text>
+<rect x="880" y="230" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="980.0" y="259.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">review-service</text>
+<text x="980.0" y="278.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST + JPA</text>
+<text x="980.0" y="294.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Eureka client · ×3</text>
+<rect x="880" y="440" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="980.0" y="469.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">user-service</text>
+<text x="980.0" y="488.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST + JPA</text>
+<text x="980.0" y="504.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Eureka client</text>
+<polyline points="830,360 880,272" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="850" y="305" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">HTTP</text>
+<polyline points="830,380 880,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="850" y="440" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">HTTP</text>
+<polyline points="575,415 575,450" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M500,460 A75.0,10 0 0 1 650,460 V525 A75.0,10 0 0 1 500,525 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="575.0" cy="460" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="575.0" y="493.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">catalog DB</text>
+<text x="575.0" y="512.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<polyline points="1080,270 1120,270" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M1120,238 A75.0,10 0 0 1 1270,238 V303 A75.0,10 0 0 1 1120,303 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="1195.0" cy="238" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="1195.0" y="271.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">reviews DB</text>
+<text x="1195.0" y="290.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<polyline points="1080,480 1120,480" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M1120,448 A75.0,10 0 0 1 1270,448 V513 A75.0,10 0 0 1 1120,513 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="1195.0" cy="448" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="1195.0" y="481.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">users DB</text>
+<text x="1195.0" y="500.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<polyline points="300,325 300,145 470,145" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="310" y="240" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">lookup</text>
+<polyline points="575,325 575,181" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)" marker-start="url(#arrowStart)"/>
+<text x="585" y="255" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">register + lookup</text>
+<polyline points="980,230 980,205 650,205 650,181" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="815" y="199" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">register (heartbeat)</text>
+<path d="M225,465 A75.0,10 0 0 1 375,465 V530 A75.0,10 0 0 1 225,530 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<ellipse cx="300.0" cy="465" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="300.0" y="498.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Redis</text>
+<text x="300.0" y="517.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">gateway rate limits</text>
+<polyline points="300,415 300,455" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<rect x="880" y="555" width="200" height="60" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="980.0" y="581.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Zipkin</text>
+<text x="980.0" y="600.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">traces from all services</text>
+<rect x="1017" y="548" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1046.5" y="560" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="30" y="660" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6"/>
+<text x="72" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Spring Boot service</text>
+<rect x="225" y="660" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="267" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Stretch (optional)</text>
+<rect x="413" y="660" width="34" height="18" rx="4" fill="#E8EAF6" stroke="#3949AB" stroke-width="1.6"/>
+<text x="455" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Spring Cloud infra</text>
+<rect x="601" y="660" width="34" height="18" rx="4" fill="#FFF3E0" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="643" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Resilience4j</text>
+<rect x="750" y="660" width="34" height="18" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.6"/>
+<text x="792" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Database</text>
+<rect x="872" y="660" width="34" height="18" rx="4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="914" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">External</text>
+<rect x="994" y="660" width="34" height="18" rx="4" fill="none" stroke="#546E7A" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1036" y="674" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">docker-compose network</text>
+</svg>

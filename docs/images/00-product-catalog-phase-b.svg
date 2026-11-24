@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="690" viewBox="0 0 1500 690">
+<title>Project 0 - Product Catalog Phase B</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 0 · Product Catalog · Phase B: same apps on Kubernetes</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Kubernetes replaces the plumbing (registry, config, load balancing), not the protection</text>
+<rect x="170" y="75" width="1010" height="550" rx="16" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="186" y="97" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#326CE5" text-anchor="start">Kubernetes cluster (kind)</text>
+<text x="186" y="115" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">namespace: catalog · no Eureka · no Config Server</text>
+<rect x="600" y="110" width="210" height="64" rx="10" fill="#E1F5FE" stroke="#0277BD" stroke-width="2"/>
+<text x="705.0" y="138.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">ConfigMaps + Secrets</text>
+<text x="705.0" y="157.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">→ env vars / application.yaml</text>
+<polyline points="705,174 705,285" fill="none" stroke="#455A64" stroke-width="1.4" stroke-dasharray="4 4"/>
+<text x="712" y="235" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start">mounted into pods</text>
+<rect x="20" y="300" width="120" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="80.0" y="326.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
+<text x="80.0" y="345.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">browser / Postman</text>
+<polyline points="140,330 200,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="200" y="290" width="150" height="80" rx="10" fill="#E1F5FE" stroke="#0277BD" stroke-width="2"/>
+<text x="275.0" y="319.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Ingress</text>
+<text x="275.0" y="338.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">or Gateway API</text>
+<text x="275.0" y="353.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">public entry</text>
+<polyline points="350,330 385,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="385" y="285" width="180" height="90" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="475.0" y="311.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">api-gateway</text>
+<text x="475.0" y="330.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Cloud Gateway</text>
+<text x="475.0" y="346.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">optional on K8s</text>
+<text x="475.0" y="361.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Java filters (JWT…)</text>
+<polyline points="565,330 600,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="600" y="285" width="210" height="90" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="705.0" y="311.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">catalog-service</text>
+<text x="705.0" y="330.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · RestClient</text>
+<text x="705.0" y="346.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">http://review-service:8080</text>
+<text x="705.0" y="361.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">http://user-service:8080</text>
+<polyline points="810,330 830,330" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="830" y="305" width="100" height="50" rx="10" fill="#FFF3E0" stroke="#EF6C00" stroke-width="2"/>
+<text x="880.0" y="326.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Resilience4j</text>
+<text x="880.0" y="345.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">still needed</text>
+<text x="1050" y="190" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#326CE5" text-anchor="middle">kube-dns name: review-service</text>
+<rect x="950" y="200" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1050.0" y="229.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">review-service</text>
+<text x="1050.0" y="248.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Deployment ×3</text>
+<text x="1050.0" y="264.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Service: review-service</text>
+<rect x="950" y="390" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1050.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">user-service</text>
+<text x="1050.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Deployment</text>
+<text x="1050.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">Service: user-service</text>
+<polyline points="930,320 950,245" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="930,340 950,425" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M620,460 A85.0,10 0 0 1 790,460 V535 A85.0,10 0 0 1 620,535 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="705.0" cy="460" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="705.0" y="491.5" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
+<text x="705.0" y="510.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">StatefulSet</text>
+<text x="705.0" y="524.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">one DB per service</text>
+<polyline points="705,375 705,450" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="950,450 791,492" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1150,240 1165,240 1165,590 730,590 730,546" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1210" y="95" width="270" height="420" rx="12" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.4"/>
+<text x="1345" y="123" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">What Kubernetes replaced</text>
+<text x="1228" y="157" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#9E9E9E" text-anchor="start" text-decoration="line-through">Eureka</text>
+<text x="1228" y="176" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#326CE5" text-anchor="start">→ Service + DNS</text>
+<text x="1228" y="209" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#9E9E9E" text-anchor="start" text-decoration="line-through">Spring Cloud LoadBalancer</text>
+<text x="1228" y="228" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#326CE5" text-anchor="start">→ Service (kube-proxy)</text>
+<text x="1228" y="261" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#9E9E9E" text-anchor="start" text-decoration="line-through">Config Server</text>
+<text x="1228" y="280" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#326CE5" text-anchor="start">→ ConfigMaps + Secrets</text>
+<text x="1345" y="321" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Still needed</text>
+<text x="1228" y="351" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2E7D32" text-anchor="start">✓ Resilience4j</text>
+<text x="1244" y="369" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="start">app-level timeouts + breakers</text>
+<text x="1228" y="397" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2E7D32" text-anchor="start">✓ Spring Cloud Gateway</text>
+<text x="1244" y="415" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="start">only if you need Java filters</text>
+<text x="1345" y="495" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle" font-style="italic">Replaces the plumbing, not the protection.</text>
+<rect x="30" y="650" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6"/>
+<text x="72" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Spring Boot service</text>
+<rect x="225" y="650" width="34" height="18" rx="4" fill="#FFF3E0" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="267" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Resilience4j</text>
+<rect x="374" y="650" width="34" height="18" rx="4" fill="#E1F5FE" stroke="#0277BD" stroke-width="1.6"/>
+<text x="416" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kubernetes resource</text>
+<rect x="569" y="650" width="34" height="18" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.6"/>
+<text x="611" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Database</text>
+<rect x="691" y="650" width="34" height="18" rx="4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="733" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">External</text>
+<rect x="813" y="650" width="34" height="18" rx="4" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="855" y="664" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kubernetes boundary</text>
+</svg>

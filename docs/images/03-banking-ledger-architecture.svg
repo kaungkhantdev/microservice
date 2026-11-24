@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1770" height="800" viewBox="0 0 1770 800">
+<title>Project 3 - Banking Ledger architecture</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 3 · Event-sourced Banking Ledger (CQRS)</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Kafka event log is the source of truth · read models are disposable and rebuilt by replay</text>
+<rect x="190" y="70" width="1360" height="670" rx="16" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="206" y="92" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#326CE5" text-anchor="start">Kubernetes cluster (kind)</text>
+<text x="206" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">namespace: ledger · all manifests deployed by Argo CD · default-deny NetworkPolicies</text>
+<text x="210" y="150" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#326CE5" text-anchor="start">WRITE SIDE · commands</text>
+<rect x="25" y="175" width="130" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="90.0" y="201.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
+<text x="90.0" y="220.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">commands (HTTP)</text>
+<polyline points="155,205 220,205" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="220" y="165" width="180" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="310.0" y="194.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">command-api</text>
+<text x="310.0" y="213.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST</text>
+<text x="310.0" y="229.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">202 + commandId</text>
+<polyline points="400,205 440,205" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="440" y="188" width="190" height="34" rx="17.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="535.0" y="209.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">account.commands</text>
+<polyline points="630,205 670,205" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="670" y="150" width="240" height="120" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="790.0" y="183.5" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">account-processor</text>
+<text x="790.0" y="203.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Kafka Streams · exactly_once_v2</text>
+<text x="790.0" y="218.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">validates rules (no overdraft)</text>
+<text x="790.0" y="234.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">state store = current account state</text>
+<text x="790.0" y="249.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">single writer per accountId</text>
+<rect x="670" y="290" width="240" height="64" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="790.0" y="318.75" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">transfer-processor</text>
+<text x="790.0" y="338.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Kafka Streams · transfer saga</text>
+<rect x="847" y="283" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="876.5" y="295" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="950" y="130" width="270" height="245" rx="12" fill="#FFF8EE" stroke="#FFB74D" stroke-width="1.4"/>
+<text x="1085.0" y="149" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#BF5B00" text-anchor="middle">Kafka (Strimzi) · mTLS + ACLs</text>
+<rect x="965" y="160" width="240" height="46" rx="23.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2.6"/>
+<text x="1085.0" y="181.0" font-family="Menlo, Consolas, monospace" font-size="12" font-weight="bold" fill="#212121" text-anchor="middle">account.events</text>
+<text x="1085.0" y="196.0" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#616161" text-anchor="middle">source of truth · retention ∞ · NOT compacted</text>
+<rect x="965" y="220" width="240" height="30" rx="15.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1085.0" y="239.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">account.snapshots (compacted)</text>
+<rect x="965" y="262" width="240" height="30" rx="15.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="1085.0" y="281.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">command.results (compacted)</text>
+<rect x="965" y="304" width="240" height="30" rx="15.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1085.0" y="323.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">transfer.events</text>
+<text x="1085" y="360" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">partition key = accountId</text>
+<polyline points="910,183 965,183" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="937" y="176" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">events</text>
+<polyline points="910,235 965,235" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<polyline points="910,262 965,277" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="910,322 965,319" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)" marker-start="url(#arrowStart)"/>
+<polyline points="1205,277 1236,277 1236,395 310,395 310,246" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="700" y="389" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">command status → GET /commands/{id}</text>
+<text x="210" y="440" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#326CE5" text-anchor="start">READ SIDE · projections &amp; queries</text>
+<polyline points="1085,375 1085,425" fill="none" stroke="#455A64" stroke-width="1.4"/>
+<polyline points="480.0,425 1140.0,425" fill="none" stroke="#455A64" stroke-width="1.4"/>
+<text x="480.0" y="418" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">each projection consumes account.events · read_committed · its own consumer group</text>
+<polyline points="480.0,425 480.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="380" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="480.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">balance-projection</text>
+<text x="480.0" y="503.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="480.0" y="519.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">upsert by (accountId, version)</text>
+<polyline points="480.0,535 480.0,573" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M400,583 A80.0,10 0 0 1 560,583 V645 A80.0,10 0 0 1 400,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="480.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="480.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">balances_v1</text>
+<text x="480.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL / Redis</text>
+<polyline points="700.0,425 700.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="600" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="700.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">statement-projection</text>
+<text x="700.0" y="503.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="700.0" y="519.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">running balance per txn</text>
+<rect x="737" y="448" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="766.5" y="460" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="700.0,535 700.0,573" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M620,583 A80.0,10 0 0 1 780,583 V645 A80.0,10 0 0 1 620,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<ellipse cx="700.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="700.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">statements</text>
+<text x="700.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<polyline points="920.0,425 920.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="820" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="920.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">audit-projection</text>
+<text x="920.0" y="503.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · @KafkaListener</text>
+<text x="920.0" y="519.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">incl. rejected commands</text>
+<rect x="957" y="448" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="986.5" y="460" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="920.0,535 920.0,573" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M840,583 A80.0,10 0 0 1 1000,583 V645 A80.0,10 0 0 1 840,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<ellipse cx="920.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="920.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">audit</text>
+<text x="920.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">OpenSearch</text>
+<polyline points="1140.0,425 1140.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1040" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1140.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">new read model</text>
+<text x="1140.0" y="503.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">added &quot;6 months later&quot;</text>
+<text x="1140.0" y="519.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">replay from offset 0 · blue/green</text>
+<rect x="1177" y="448" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1206.5" y="460" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="1140.0,535 1140.0,573" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M1060,583 A80.0,10 0 0 1 1220,583 V645 A80.0,10 0 0 1 1060,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<ellipse cx="1140.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1140.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">new_model_v2</text>
+<text x="1140.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<rect x="25" y="645" width="130" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="90.0" y="671.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
+<text x="90.0" y="690.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">queries (HTTP)</text>
+<polyline points="155,675 220,675" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="220" y="640" width="180" height="70" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="310.0" y="671.75" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">query-api</text>
+<text x="310.0" y="691.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · read-only</text>
+<polyline points="400,690 1140.0,690" fill="none" stroke="#455A64" stroke-width="1.4"/>
+<polyline points="480.0,690 480.0,657" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="700.0,690 700.0,657" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="920.0,690 920.0,657" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1140.0,690 1140.0,657" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="420" y="712" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start">reads the active projection version (chosen in Git-managed config → switch / rollback)</text>
+<rect x="1290" y="130" width="240" height="90" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1410.0" y="164.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Argo CD</text>
+<text x="1410.0" y="183.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">app-of-apps · auto-sync</text>
+<text x="1410.0" y="198.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">self-heals manual drift</text>
+<rect x="1467" y="123" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1496.5" y="135" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="1595" y="145" width="150" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="1670.0" y="171.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Git repo</text>
+<text x="1670.0" y="190.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">deploy/ manifests</text>
+<polyline points="1595,175 1532,175" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="1574" y="166" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">sync</text>
+<rect x="1290" y="250" width="240" height="130" rx="10" fill="#FCE4EC" stroke="#AD1457" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1410.0" y="289.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Security</text>
+<text x="1410.0" y="308.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">Kafka mTLS: TLS listener + KafkaUser</text>
+<text x="1410.0" y="323.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">ACLs: only account-processor</text>
+<text x="1410.0" y="338.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">may write account.events</text>
+<text x="1410.0" y="353.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">default-deny NetworkPolicies</text>
+<rect x="1467" y="243" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="1496.5" y="255" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<rect x="1290" y="455" width="240" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1410.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">invariant-checker</text>
+<text x="1410.0" y="503.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · K8s CronJob · reads stores</text>
+<text x="1410.0" y="519.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">money conserved · balance ≥ 0</text>
+<rect x="30" y="758" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6"/>
+<text x="72" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Spring Boot service</text>
+<rect x="225" y="758" width="34" height="18" rx="4" fill="#E8F5E9" stroke="#43A047" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="267" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Stretch (optional)</text>
+<rect x="413" y="758" width="34" height="18" rx="9" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
+<text x="455" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kafka topic</text>
+<rect x="555" y="758" width="34" height="18" rx="6" fill="#E3F2FD" stroke="#1E88E5" stroke-width="1.6"/>
+<text x="597" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Read-model store</text>
+<rect x="730" y="758" width="34" height="18" rx="4" fill="#EDE7F6" stroke="#5E35B1" stroke-width="1.6"/>
+<text x="772" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Platform component</text>
+<rect x="918" y="758" width="34" height="18" rx="4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="960" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">External</text>
+<rect x="1040" y="758" width="34" height="18" rx="4" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1082" y="772" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kubernetes boundary</text>
+</svg>
