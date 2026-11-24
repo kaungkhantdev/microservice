@@ -1,8 +1,8 @@
-# Project 3 · Banking Ledger
+# Project 5 · Banking Ledger
 
 > **The log is the truth. Everything else is a view.**
 
-**Level:** Advanced · **Core effort:** 1–2 weeks · **Builds on:** Projects 1 and 2
+**Level:** Advanced · **Core effort:** 1–2 weeks · **Builds on:** Projects 3 and 4
 
 ## What you build
 
@@ -31,7 +31,7 @@ command  →  validate  →  EVENT LOG (forever)  →  projections  →  queries
 
 ## Architecture
 
-![Banking Ledger architecture](images/03-banking-ledger-architecture.svg)
+![Banking Ledger architecture](images/05-banking-ledger-architecture.svg)
 
 | Service | Job |
 |---------|-----|
@@ -49,6 +49,46 @@ command  →  validate  →  EVENT LOG (forever)  →  projections  →  queries
 | `account.snapshots` | compact | Latest state per account |
 | `command.results` | compact | `ACCEPTED` or `REJECTED` per command |
 | `transfer.events` | delete, ∞ | Transfer saga steps |
+
+## How it works
+
+### User stories
+
+**User side**
+
+| As a… | I want to… | So that… |
+|-------|------------|----------|
+| Customer | deposit and withdraw, and get a command ID | I can track my request |
+| Customer | never withdraw more than I have | my account is never negative |
+| Customer | see my balance | I know what I have |
+| Auditor | see every action, including rejected ones *(stretch)* | nothing is hidden |
+
+**Service side**
+
+| Service | Its story |
+|---------|-----------|
+| `command-api` | I accept commands and reply `202` with a command ID. I don't decide anything. |
+| `account-processor` | I'm the **only writer** per account. I check the balance and write the event + result in **one Kafka transaction**. |
+| `balance-projection` | I turn events into balances, and I can rebuild them from offset 0. |
+| `query-api` | I only read. |
+
+### Flow: withdraw money
+
+![Banking Ledger flow](images/05-banking-ledger-sequence.svg)
+
+1. The customer sends `POST /accounts/A/withdrawals {100}`.
+2. `command-api` publishes `WithdrawMoney` (key = A) and replies `202`.
+3. `account-processor` receives the command.
+4. It checks its state store: balance 500 ≥ 100 ✓.
+5. In one Kafka transaction, it writes `MoneyWithdrawn` and `ACCEPTED`.
+6. `balance-projection` receives `MoneyWithdrawn`.
+7. It saves the balance as 400 (version 12).
+8. `command-api` receives `ACCEPTED`.
+9. The customer checks `GET /commands/{id}` → `ACCEPTED`.
+10. The customer asks `query-api` for the balance → 400.
+
+**If funds are too low:** the processor writes `CommandRejected` and the command status becomes `REJECTED: insufficient funds`.
+**Rebuild:** a new projection replays `account.events` from offset 0 into `balances_v2`.
 
 ## Scope
 
@@ -133,6 +173,13 @@ command  →  validate  →  EVENT LOG (forever)  →  projections  →  queries
 | AT-7 | Stretch | Connect to Kafka from a pod in another namespace | NetworkPolicy blocks it | NFR-16 |
 | AT-8 | Stretch | `kubectl edit` a Deployment by hand | Argo CD reverts it | NFR-13 |
 | AT-9 | Stretch | Ask for the balance as of 3 months ago | It matches a manual replay | FR-12 |
+
+## Testing
+
+| Type | File | What it proves |
+|------|------|----------------|
+| End-to-end | [testing/e2e/05-banking-ledger.md](../testing/e2e/05-banking-ledger.md) | The user stories work across all services |
+| Load (k6) | [testing/load/05-banking-ledger.js](../testing/load/05-banking-ledger.js) | The performance NFRs (`k6 run -e PROFILE=load …`) |
 
 ## Out of scope / stretch ideas
 

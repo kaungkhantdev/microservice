@@ -1,8 +1,8 @@
-# Project 2 · Order Saga
+# Project 4 · Order Saga
 
 > **Every step has an undo.**
 
-**Level:** Upper-intermediate · **Core effort:** about a week · **Reuses:** Project 1
+**Level:** Upper-intermediate · **Core effort:** about a week · **Reuses:** Project 3
 
 ## What you build
 
@@ -27,7 +27,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 
 ## Architecture
 
-![Order Saga architecture](images/02-order-saga-architecture.svg)
+![Order Saga architecture](images/04-order-saga-architecture.svg)
 
 | Service | Owns | Job |
 |---------|------|-----|
@@ -35,15 +35,57 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | `payment-service` | payments DB | Charge and refund (fake gateway) |
 | `inventory-service` | inventory DB | Reserve and release stock |
 | `shipping-service` | shipping DB | Book shipment (fake carrier) |
-| `notification-service` | (Project 1) | Tell the customer |
+| `notification-service` | (Project 3) | Tell the customer |
 
 ## Saga flow
 
-![Order Saga event flow and compensations](images/02-order-saga-flow.svg)
+![Order Saga event flow and compensations](images/04-order-saga-flow.svg)
 
 **Order status:** `PENDING → PAYMENT_AUTHORIZED → STOCK_RESERVED → SHIPPING_SCHEDULED → COMPLETED`, or `… → COMPENSATING → CANCELLED`.
 
 **Topics:** one per service (`orders.order.events`, `payments.payment.events`, `inventory.stock.events`, `shipping.shipment.events`), all keyed by `orderId`.
+
+## How it works
+
+### User stories
+
+**User side**
+
+| As a… | I want to… | So that… |
+|-------|------------|----------|
+| Customer | place an order and get an order ID right away | I don't wait for payment and stock |
+| Customer | check my order's status and history | I know what happened |
+| Customer | be refunded automatically if stock runs out | I never pay for nothing |
+| Customer | cancel before shipping *(stretch)* | I can change my mind |
+
+**Service side**
+
+| Service | Its story |
+|---------|-----------|
+| `order-service` | I save the order and its event in **one transaction** (outbox) and track the status. |
+| `payment-service` | I charge on `OrderCreated` and refund on `StockUnavailable`. |
+| `inventory-service` | I reserve all items or none. |
+| Debezium | I copy new outbox rows to Kafka. |
+| every service | I skip events I've already processed. |
+
+### Flow: place an order
+
+![Order Saga flow](images/04-order-saga-sequence.svg)
+
+1. The customer sends `POST /orders`.
+2. `order-service` saves the order (`PENDING`) and `OrderCreated` in one transaction, then replies `202`.
+3. Debezium publishes `OrderCreated`.
+4. `payment-service` receives it.
+5. It authorizes the payment and saves it with its outbox event.
+6. It publishes `PaymentAuthorized`.
+7. `inventory-service` receives it.
+8. It reserves the stock.
+9. It publishes `StockReserved`.
+10. `order-service` receives it.
+11. The order becomes `COMPLETED`.
+12. The customer checks `GET /orders/{id}`.
+
+**If stock is unavailable:** inventory publishes `StockUnavailable` → payment refunds and publishes `PaymentRefunded` → the order becomes `CANCELLED`.
 
 ## Scope
 
@@ -83,7 +125,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | **FR-10** | **Core** | **Outbox:** state and event in one DB transaction, published by Debezium. No direct `KafkaTemplate`. |
 | **FR-11** | Stretch | **Retry topics:** `retry-5s` → `retry-1m` → `dlq`. |
 | **FR-12** | Stretch | **Schemas:** Avro or Protobuf in Schema Registry, `BACKWARD` compatible. |
-| **FR-13** | Stretch | **Notify:** completed or cancelled → Project 1 sends a message. |
+| **FR-13** | Stretch | **Notify:** completed or cancelled → Project 3 sends a message. |
 | **FR-14** | Stretch | **DLQ admin:** list, inspect, replay. |
 
 ## Non-functional requirements
@@ -121,6 +163,13 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | AT-7 | Stretch | Drain a node | Services stay up, no order gets stuck | NFR-9 |
 | AT-8 | Stretch | Inject 30% inventory errors | Retry tiers work, and the rest go to the DLQ | FR-11 |
 | AT-9 | Stretch | Cancel an order at `STOCK_RESERVED` | Stock released, payment refunded, order `CANCELLED` | FR-8 |
+
+## Testing
+
+| Type | File | What it proves |
+|------|------|----------------|
+| End-to-end | [testing/e2e/04-order-saga.md](../testing/e2e/04-order-saga.md) | The user stories work across all services |
+| Load (k6) | [testing/load/04-order-saga.js](../testing/load/04-order-saga.js) | The performance NFRs (`k6 run -e PROFILE=load …`) |
 
 ## Out of scope
 

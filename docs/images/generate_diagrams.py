@@ -30,6 +30,7 @@ class Svg:
     def __init__(self, w, h, title):
         self.w, self.h, self.title = w, h, title
         self.els = []
+        self.bg = []
 
     # ---------- primitives ----------
     def text(self, x, y, s, size=13, weight="normal", fill=None, anchor="middle",
@@ -194,19 +195,25 @@ class Svg:
             f'<path d="M0,0 L10,5 L0,10 z" fill="{C["arrow"]}"/></marker>'
             f'<marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto">'
             f'<path d="M10,0 L0,5 L10,10 z" fill="{C["arrow"]}"/></marker>'
-            '</defs>\n'
+            + "".join(
+                f'<marker id="mk-{n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">'
+                f'<path d="{d}" fill="{f}" stroke="{f}" stroke-width="1.2"/></marker>'
+                for n, d, f in [("orange", "M0,0 L10,5 L0,10 z", "#EF6C00"),
+                                ("red", "M0,0 L10,5 L0,10 z", "#C62828"),
+                                ("grey", "M0,1 L9,5 L0,9", "#78909C")])
+            + '</defs>\n'
             f'<rect width="100%" height="100%" fill="white"/>\n'
-            + "\n".join(self.els) + "\n</svg>\n")
+            + "\n".join(self.bg + self.els) + "\n</svg>\n")
         (OUT / name).write_text(svg)
         print("wrote", OUT / name)
 
 
 # =====================================================================
-# Project 1 — Notification Hub
+# Project 3 — Notification Hub
 # =====================================================================
 def notification_hub():
-    s = Svg(1600, 700, "Project 1 - Notification Hub architecture")
-    s.heading("Project 1 · Real-time Notification Hub",
+    s = Svg(1600, 700, "Project 3 - Notification Hub architecture")
+    s.heading("Project 3 · Real-time Notification Hub",
               "Spring Boot services on Kubernetes, communicating only through Kafka topics")
     s.boundary(180, 80, 1240, 540, "Kubernetes cluster (kind)",
                "namespace: notifications (apps) · namespace: kafka (Strimzi)")
@@ -267,15 +274,15 @@ def notification_hub():
     s.legend(660, [("service", "Spring Boot service"), ("stretch", "Stretch (optional)"),
                    ("topic", "Kafka topic"), ("dlq", "Dead-letter topic"), ("db", "Database"),
                    ("ext", "External / stub"), ("k8s", "Kubernetes boundary")])
-    s.save("01-notification-hub-architecture.svg")
+    s.save("03-notification-hub-architecture.svg")
 
 
 # =====================================================================
-# Project 2 — Order Saga (architecture)
+# Project 4 — Order Saga (architecture)
 # =====================================================================
 def order_saga_architecture():
-    s = Svg(1560, 900, "Project 2 - Order Saga architecture")
-    s.heading("Project 2 · E-commerce Order Saga",
+    s = Svg(1560, 900, "Project 4 - Order Saga architecture")
+    s.heading("Project 4 · E-commerce Order Saga",
               "Database per service · transactional outbox → Debezium CDC → Kafka → idempotent consumers")
     s.boundary(170, 70, 1360, 740, "Kubernetes cluster (kind)",
                "namespace: shop · one Helm umbrella chart · PodDisruptionBudgets · Kafka & Connect via Strimzi")
@@ -314,7 +321,7 @@ def order_saga_architecture():
         ("payment-service", ["Spring Boot · fake gateway", "consumes: order, stock,", "shipment events"], False),
         ("inventory-service", ["Spring Boot · JPA", "consumes: payment,", "shipment events"], False),
         ("shipping-service", ["Spring Boot · fake carrier", "consumes: stock events"], True),
-        ("notification-service", ["from Project 1", "consumes: order events"], True),
+        ("notification-service", ["from Project 3", "consumes: order events"], True),
     ]
     for (name, lines, st), x in zip(services, cols):
         s.service(x, 380, cw, 100, name, lines, stretch=st)
@@ -323,7 +330,7 @@ def order_saga_architecture():
            ("payments DB", ["payments · outbox", "processed_events"], False),
            ("inventory DB", ["stock · outbox", "processed_events"], False),
            ("shipping DB", ["shipments · outbox", "processed_events"], True),
-           ("notifications DB", ["from Project 1"], True)]
+           ("notifications DB", ["from Project 3"], True)]
     for i, ((name, lines, st), x) in enumerate(zip(dbs, cols)):
         s.arrow([(centers[i], 480), (centers[i], 530)],
                 "1 local tx: state + outbox row" if i == 0 else None,
@@ -348,15 +355,15 @@ def order_saga_architecture():
     s.legend(860, [("service", "Spring Boot service"), ("stretch", "Stretch (optional)"),
                    ("topic", "Kafka topic"), ("dlq", "Retry / DLQ topics"), ("db", "Database"),
                    ("infra", "Platform component"), ("ext", "External"), ("k8s", "Kubernetes boundary")])
-    s.save("02-order-saga-architecture.svg")
+    s.save("04-order-saga-architecture.svg")
 
 
 # =====================================================================
-# Project 2 — Order Saga (event flow)
+# Project 4 — Order Saga (event flow)
 # =====================================================================
 def order_saga_flow():
-    s = Svg(1260, 680, "Project 2 - Order Saga event flow")
-    s.heading("Project 2 · Saga event flow and compensations")
+    s = Svg(1260, 680, "Project 4 - Order Saga event flow")
+    s.heading("Project 4 · Saga event flow and compensations")
     cols = [40, 290, 540, 790, 1040]
     w = 190
     cx = [c + w / 2 for c in cols]
@@ -409,15 +416,15 @@ def order_saga_flow():
 
     s.legend(645, [("ok", "Success event"), ("fail", "Failure event"), ("comp", "Compensation event"),
                    ("end", "Terminal state"), ("stretch", "Dashed = stretch")])
-    s.save("02-order-saga-flow.svg")
+    s.save("04-order-saga-flow.svg")
 
 
 # =====================================================================
-# Project 3 — Banking Ledger
+# Project 5 — Banking Ledger
 # =====================================================================
 def banking_ledger():
-    s = Svg(1770, 800, "Project 3 - Banking Ledger architecture")
-    s.heading("Project 3 · Event-sourced Banking Ledger (CQRS)",
+    s = Svg(1770, 800, "Project 5 - Banking Ledger architecture")
+    s.heading("Project 5 · Event-sourced Banking Ledger (CQRS)",
               "Kafka event log is the source of truth · read models are disposable and rebuilt by replay")
     s.boundary(190, 70, 1360, 670, "Kubernetes cluster (kind)",
                "namespace: ledger · all manifests deployed by Argo CD · default-deny NetworkPolicies")
@@ -499,18 +506,18 @@ def banking_ledger():
     s.legend(770, [("service", "Spring Boot service"), ("stretch", "Stretch (optional)"),
                    ("topic", "Kafka topic"), ("db", "Read-model store"), ("infra", "Platform component"),
                    ("ext", "External"), ("k8s", "Kubernetes boundary")])
-    s.save("03-banking-ledger-architecture.svg")
+    s.save("05-banking-ledger-architecture.svg")
 
 # =====================================================================
-# Project 0 — Product Catalog (request-driven)
+# Project 1 — Product Catalog (request-driven)
 # =====================================================================
 CLOUD = dict(fill="#E8EAF6", stroke="#3949AB")
 RESIL = dict(fill="#FFF3E0", stroke="#EF6C00")
 
 
 def product_catalog_phase_a():
-    s = Svg(1500, 700, "Project 0 - Product Catalog Phase A")
-    s.heading("Project 0 · Product Catalog · Phase A: classic Spring Cloud",
+    s = Svg(1500, 700, "Project 1 - Product Catalog Phase A")
+    s.heading("Project 1 · Product Catalog · Phase A: classic Spring Cloud",
               "docker-compose · service registry · API gateway · config server · circuit breaker")
     s.boundary(170, 75, 1130, 560, "docker-compose network",
                "only the gateway port (8080) is published", color="#546E7A")
@@ -562,12 +569,12 @@ def product_catalog_phase_a():
     s.legend(672, [("service", "Spring Boot service"), ("stretch", "Stretch (optional)"),
                    ("cloud", "Spring Cloud infra"), ("resil", "Resilience4j"), ("db", "Database"),
                    ("ext", "External"), ("compose", "docker-compose network")])
-    s.save("00-product-catalog-phase-a.svg")
+    s.save("01-product-catalog-phase-a.svg")
 
 
 def product_catalog_phase_b():
-    s = Svg(1500, 690, "Project 0 - Product Catalog Phase B")
-    s.heading("Project 0 · Product Catalog · Phase B: same apps on Kubernetes",
+    s = Svg(1500, 690, "Project 1 - Product Catalog Phase B")
+    s.heading("Project 1 · Product Catalog · Phase B: same apps on Kubernetes",
               "Kubernetes replaces the plumbing (registry, config, load balancing), not the protection")
     s.boundary(170, 75, 1010, 550, "Kubernetes cluster (kind)",
                "namespace: catalog · no Eureka · no Config Server")
@@ -623,12 +630,345 @@ def product_catalog_phase_b():
     s.legend(662, [("service", "Spring Boot service"), ("resil", "Resilience4j"),
                    ("k8sres", "Kubernetes resource"), ("db", "Database"), ("ext", "External"),
                    ("k8s", "Kubernetes boundary")])
-    s.save("00-product-catalog-phase-b.svg")
+    s.save("01-product-catalog-phase-b.svg")
+
+
+# =====================================================================
+# Project 2 — URL Shortener (sync hot path + async analytics)
+# =====================================================================
+def url_shortener():
+    s = Svg(1500, 790, "Project 2 - URL Shortener architecture")
+    s.heading("Project 2 · URL Shortener",
+              "Sync hot path (redirect from cache) + async analytics (click events through Kafka)")
+    s.boundary(170, 75, 1095, 650, "Kubernetes cluster (kind)",
+               "namespace: shortener")
+
+    # zones
+    s.rect(400, 262, 530, 145, "#F1F8E9", "none", rx=14, sw=0)
+    s.text(412, 279, "HOT PATH · sync · p95 < 20 ms", size=11.5, weight="bold", fill=C["ok_stroke"], anchor="start")
+    s.rect(400, 435, 840, 265, "#FFF8EE", "none", rx=14, sw=0)
+    s.text(415, 688, "ANALYTICS · async · counted seconds later", size=11.5, weight="bold",
+           fill="#BF5B00", anchor="start")
+
+    # entry
+    s.ext(20, 300, 120, 70, "Client", ["browser / API"])
+    s.arrow([(140, 335), (200, 335)])
+    s.infra(200, 280, 140, 110, "Ingress", ["/links → link", "/{code} → redirect", "/stats → analytics"],
+            fill="#E1F5FE", stroke="#0277BD")
+
+    # link creation
+    s.arrow([(340, 300), (420, 160)], "POST /links", (372, 220), label_anchor="end")
+    s.service(420, 110, 210, 80, "link-service", ["Spring Boot · REST + JPA", "POST /links · Base62 code"])
+    s.arrow([(630, 150), (740, 150)], "save", (685, 143))
+    s.db(740, 105, 170, 90, "PostgreSQL", ["links: code → url"])
+
+    # redirect
+    s.arrow([(340, 340), (420, 340)], "GET /{code}", (380, 332))
+    s.service(420, 290, 210, 100, "redirect-service",
+              ["Spring Boot · HPA 2–10 pods", "GET /{code} → 302", "fires click event (async)"])
+    s.arrow([(630, 330), (740, 330)], "1 lookup", (685, 323))
+    s.db(740, 295, 170, 90, "Redis", ["cache-aside · TTL 1 h"])
+    s.arrow([(615, 290), (615, 240), (825, 240), (825, 196)], dash=True,
+            label="2 on cache miss: read DB, fill cache", at=(720, 234))
+
+    # kafka + analytics
+    s.band(420, 465, 490, 110, "Kafka (Strimzi)")
+    s.topic(440, 500, 450, "links.click.events", h=34, bold=True)
+    s.text(665, 558, "key = code · batched + compressed · 6 partitions", size=10.5, fill=C["muted"])
+    s.arrow([(525, 390), (525, 499)], "3 send async (never waits)", (535, 445), label_anchor="start")
+    s.arrow([(910, 517), (990, 517)], "consume", (950, 510))
+    s.service(990, 470, 210, 100, "analytics-service",
+              ["Spring Boot · batch @KafkaListener", "counts per link / minute", "GET /links/{code}/stats"])
+    s.arrow([(1095, 570), (1095, 600)])
+    s.db(1020, 600, 150, 80, "stats DB", ["PostgreSQL"])
+    s.arrow([(270, 390), (270, 712), (1240, 712), (1240, 520), (1201, 520)], dash=True,
+            label="GET /links/{code}/stats", at=(700, 706))
+
+    # memory panel
+    x, y = 1290, 95
+    s.rect(x, y, 190, 300, "#FAFAFA", "#9E9E9E", rx=12, sw=1.4)
+    s.text(x + 95, y + 30, "Remember", size=14, weight="bold")
+    lines = [("Redirect now,", True), ("count later.", True), ("", False),
+             ("Cache what's read,", True), ("stream what's written.", True), ("", False),
+             ("Kafka down?", False), ("Redirects still work.", False)]
+    yy = y + 70
+    for ln, bold in lines:
+        if ln:
+            s.text(x + 95, yy, ln, size=12.5, weight="bold" if bold else "normal",
+                   fill=C["text"] if bold else C["muted"])
+        yy += 24
+
+    s.legend(760, [("service", "Spring Boot service"), ("k8sres", "Kubernetes resource"),
+                   ("topic", "Kafka topic"), ("db", "Database / cache"), ("ext", "External"),
+                   ("k8s", "Kubernetes boundary")])
+    s.save("02-url-shortener-architecture.svg")
+
+
+# =====================================================================
+# Sequence diagrams (one per project)
+# =====================================================================
+PART_STYLE = {
+    "user": (C["ext_fill"], C["ext_stroke"], True),
+    "svc": (C["svc_fill"], C["svc_stroke"], False),
+    "kafka": (C["topic_fill"], C["topic_stroke"], False),
+    "db": (C["db_fill"], C["db_stroke"], False),
+    "cloud": ("#E8EAF6", "#3949AB", False),
+}
+SECTION_STYLE = {"fail": ("#FFEBEE", "#C62828"), "alt": ("#FFFDE7", "#F9A825"), "info": ("#F3F6FA", "#546E7A")}
+ROW, SEC = 36, 34
+
+
+def sequence(fname, title, subtitle, parts, steps, col_w=200, footer=None):
+    n = len(parts)
+    xs = {k: 120 + i * col_w for i, (k, *_rest) in enumerate(parts)}
+    W = 120 + col_w * (n - 1) + 300
+    # height
+    h = 165
+    for st in steps:
+        h += SEC if st[0] == "section" else (8 if st[0] == "end" else ROW)
+    H = h + (95 if footer else 70)
+    s = Svg(W, H, title)
+    s.heading(title, subtitle)
+
+    # participants + lifelines
+    for k, label, kind, *sub in parts:
+        x = xs[k]
+        f, st_, dash = PART_STYLE[kind]
+        bw = min(col_w - 16, 180)
+        s.line([(x, 132), (x, h + 5)], dash=True, color="#B0BEC5")
+        s.rect(x - bw / 2, 80, bw, 52, f, st_, rx=10, dash=dash, sw=2)
+        if sub:
+            s.text(x, 102, label, size=13, weight="bold")
+            s.text(x, 120, sub[0], size=10.5, fill=C["muted"])
+        else:
+            s.text(x, 111, label, size=13, weight="bold")
+
+    y = 165
+    sec_start = None
+    for st in steps:
+        kind = st[0]
+        if kind == "section":
+            sk, stitle = st[1], st[2]
+            sec_start = (y, sk)
+            fill, stroke = SECTION_STYLE[sk]
+            s.text(34, y + 21, stitle, size=12, weight="bold", fill=stroke, anchor="start")
+            y += SEC
+            continue
+        if kind == "end":
+            y0, sk = sec_start
+            fill, stroke = SECTION_STYLE[sk]
+            s.bg.append(f'<rect x="20" y="{y0}" width="{W - 40}" height="{y - y0 + 4}" rx="10" '
+                        f'fill="{fill}" stroke="{stroke}" stroke-width="1.2" stroke-dasharray="6 4"/>')
+            y += 8
+            continue
+        cy = y + ROW - 12
+        if kind == "note":
+            x = xs[st[1]]
+            w = 6.4 * len(st[2]) + 18
+            s.rect(x + 8, cy - 15, w, 24, "#FFFDE7", "#FBC02D", rx=5, sw=1.2)
+            s.text(x + 17, cy + 1, st[2], size=11.5, anchor="start")
+        else:
+            a, b, label = xs[st[1]], xs[st[2]], st[3]
+            d = 1 if b > a else -1
+            color, mk, dash, lc = {
+                "call": (C["arrow"], "url(#arrow)", "", C["text"]),
+                "reply": ("#78909C", "url(#mk-grey)", ' stroke-dasharray="6 4"', C["muted"]),
+                "event": ("#EF6C00", "url(#mk-orange)", "", "#BF5B00"),
+                "fail": ("#C62828", "url(#mk-red)", "", "#C62828"),
+            }[kind]
+            s.els.append(f'<line x1="{a}" y1="{cy}" x2="{b - d * 3}" y2="{cy}" stroke="{color}" '
+                         f'stroke-width="1.8"{dash} marker-end="{mk}"/>')
+            s.text((a + b) / 2, cy - 6, label, size=11.5, fill=lc, halo=True,
+                   weight="bold" if kind != "reply" else "normal")
+        y += ROW
+
+    ly = h + 40
+    if footer:
+        s.text(30, h + 30, footer, size=12, fill=C["muted"], anchor="start")
+        ly = h + 65
+    # legend
+    lx = 30
+    for kind, label in [("call", "call (waits)"), ("reply", "reply"), ("event", "Kafka event (async)"),
+                        ("fail", "failure"), ("note", "inside the service")]:
+        if kind == "note":
+            s.rect(lx, ly - 11, 34, 18, "#FFFDE7", "#FBC02D", rx=4, sw=1.2)
+        else:
+            color, mk, dash = {"call": (C["arrow"], "url(#arrow)", ""),
+                               "reply": ("#78909C", "url(#mk-grey)", ' stroke-dasharray="6 4"'),
+                               "event": ("#EF6C00", "url(#mk-orange)", ""),
+                               "fail": ("#C62828", "url(#mk-red)", "")}[kind]
+            s.els.append(f'<line x1="{lx}" y1="{ly - 2}" x2="{lx + 32}" y2="{ly - 2}" stroke="{color}" '
+                         f'stroke-width="1.8"{dash} marker-end="{mk}"/>')
+        s.text(lx + 42, ly + 2, label, size=12, anchor="start")
+        lx += 42 + int(6.6 * len(label)) + 30
+    s.save(fname)
+
+
+def seq_product_catalog():
+    sequence("01-product-catalog-sequence.svg", "Project 1 · Flow: open a product page",
+             "Synchronous calls through the gateway · timeout + circuit breaker protect the page",
+             [("user", "User", "user"), ("gw", "api-gateway", "svc"), ("eureka", "Eureka", "cloud", "registry"),
+              ("cat", "catalog-service", "svc"), ("rev", "review-service", "svc"), ("usr", "user-service", "svc")],
+             [("call", "user", "gw", "1. GET /api/catalog/products/42/page"),
+              ("call", "gw", "eureka", "2. where is catalog-service?"),
+              ("reply", "eureka", "gw", "10.1.0.7, 10.1.0.8"),
+              ("call", "gw", "cat", "3. GET /products/42/page"),
+              ("note", "cat", "4. load product 42 from catalog DB"),
+              ("call", "cat", "rev", "5. GET /reviews?productId=42 (1 s timeout)"),
+              ("reply", "rev", "cat", "2 reviews by users 7 and 9"),
+              ("call", "cat", "usr", "6. GET /users?ids=7,9"),
+              ("reply", "usr", "cat", "names"),
+              ("note", "cat", "7. merge product + reviews + names"),
+              ("reply", "cat", "user", "8. 200 product page"),
+              ("section", "fail", "IF review-service is slow or down"),
+              ("fail", "cat", "rev", "5. GET /reviews …  ✗ no answer within 1 s"),
+              ("note", "cat", "fallback: reviews = []"),
+              ("note", "cat", "5 of 10 calls failed → breaker OPEN: skip review-service for 10 s"),
+              ("reply", "cat", "user", "200 page · reviewsAvailable: false"),
+              ("end",)],
+             col_w=210)
+
+
+def seq_url_shortener():
+    sequence("02-url-shortener-sequence.svg", "Project 2 · Flow: create, click, count",
+             "The redirect answers from cache right away · the click is counted later through Kafka",
+             [("user", "User", "user"), ("link", "link-service", "svc"), ("red", "redirect-service", "svc"),
+              ("redis", "Redis", "db", "cache"), ("pg", "PostgreSQL", "db", "links"),
+              ("kafka", "Kafka", "kafka", "links.click.events"), ("ana", "analytics-service", "svc")],
+             [("section", "info", "A · Create a short link"),
+              ("call", "user", "link", "1. POST /links {url}"),
+              ("call", "link", "pg", "2. save abc123 → url"),
+              ("reply", "link", "user", "201 {shortUrl: /abc123}"),
+              ("end",),
+              ("section", "info", "B · Click the link (hot path)"),
+              ("call", "user", "red", "3. GET /abc123"),
+              ("call", "red", "redis", "4. GET abc123"),
+              ("reply", "redis", "red", "hit: url"),
+              ("reply", "red", "user", "5. 302 Location: url"),
+              ("event", "red", "kafka", "6. LinkClicked (async, never waits)"),
+              ("event", "kafka", "ana", "7. batch of clicks"),
+              ("note", "ana", "8. clicks += n (stats DB)"),
+              ("end",),
+              ("section", "alt", "IF the code is not in the cache (miss)"),
+              ("reply", "redis", "red", "miss"),
+              ("call", "red", "pg", "read abc123"),
+              ("reply", "pg", "red", "url"),
+              ("call", "red", "redis", "SET abc123 (TTL 1 h)"),
+              ("end",),
+              ("section", "info", "C · See the stats"),
+              ("call", "user", "ana", "9. GET /links/abc123/stats"),
+              ("reply", "ana", "user", "200 {clicks: 1}"),
+              ("end",)],
+             col_w=195)
+
+
+def seq_notification_hub():
+    sequence("03-notification-hub-sequence.svg", "Project 3 · Flow: order shipped → email",
+             "Publish once · the router fans out · workers deliver once, retry, then dead-letter",
+             [("cli", "Client", "user", "upstream service"), ("prod", "event-producer", "svc"),
+              ("kafka", "Kafka", "kafka", "topics"), ("noti", "notification-service", "svc"),
+              ("pg", "PostgreSQL", "db", "prefs · status"), ("mail", "email-worker", "svc"),
+              ("smtp", "SMTP stub", "user", "provider")],
+             [("call", "cli", "prod", "1. POST /events OrderShipped (user 7)"),
+              ("event", "prod", "kafka", "2. orders.order.events (key = user 7)"),
+              ("reply", "prod", "cli", "202 Accepted"),
+              ("event", "kafka", "noti", "3. OrderShipped"),
+              ("call", "noti", "pg", "4. preferences of user 7?"),
+              ("reply", "pg", "noti", "email ✓ push ✓ sms ✗"),
+              ("event", "noti", "kafka", "5. email.commands + push.commands"),
+              ("event", "kafka", "mail", "6. SendEmail (id = eventId + email)"),
+              ("call", "mail", "pg", "7. already SENT?"),
+              ("reply", "pg", "mail", "no"),
+              ("call", "mail", "smtp", "8. send email"),
+              ("reply", "smtp", "mail", "OK"),
+              ("call", "mail", "pg", "9. status = SENT"),
+              ("note", "mail", "10. commit offset"),
+              ("section", "fail", "IF the provider keeps failing"),
+              ("fail", "mail", "smtp", "send ✗ (retries: 200 ms, 1 s, 5 s)"),
+              ("event", "mail", "kafka", "notifications.dlq (+ error headers)"),
+              ("call", "mail", "pg", "status = FAILED"),
+              ("end",),
+              ("section", "alt", "IF the same command arrives twice"),
+              ("call", "mail", "pg", "already SENT?"),
+              ("reply", "pg", "mail", "yes → skip, just commit"),
+              ("end",)],
+             col_w=200)
+
+
+def seq_order_saga():
+    sequence("04-order-saga-sequence.svg", "Project 4 · Flow: place an order",
+             "Each service saves data + event in one DB transaction (outbox) · Debezium ships events to Kafka",
+             [("cus", "Customer", "user"), ("ord", "order-service", "svc"),
+              ("kafka", "Kafka", "kafka", "via outbox + Debezium"),
+              ("pay", "payment-service", "svc"), ("inv", "inventory-service", "svc")],
+             [("call", "cus", "ord", "1. POST /orders (Idempotency-Key)"),
+              ("note", "ord", "2. one tx: order PENDING + outbox OrderCreated"),
+              ("reply", "ord", "cus", "202 {orderId}"),
+              ("event", "ord", "kafka", "3. OrderCreated"),
+              ("event", "kafka", "pay", "4. OrderCreated"),
+              ("note", "pay", "5. authorize · one tx: payment + outbox"),
+              ("event", "pay", "kafka", "6. PaymentAuthorized"),
+              ("event", "kafka", "inv", "7. PaymentAuthorized"),
+              ("note", "inv", "8. reserve stock · one tx: stock + outbox"),
+              ("event", "inv", "kafka", "9. StockReserved"),
+              ("event", "kafka", "ord", "10. StockReserved"),
+              ("note", "ord", "11. status = COMPLETED"),
+              ("call", "cus", "ord", "12. GET /orders/{id}"),
+              ("reply", "ord", "cus", "COMPLETED + timeline"),
+              ("section", "fail", "IF stock is unavailable → compensate (undo the payment)"),
+              ("note", "inv", "8. no stock → outbox StockUnavailable"),
+              ("event", "inv", "kafka", "9. StockUnavailable"),
+              ("event", "kafka", "pay", "10. StockUnavailable"),
+              ("note", "pay", "11. refund → outbox PaymentRefunded"),
+              ("event", "pay", "kafka", "12. PaymentRefunded"),
+              ("event", "kafka", "ord", "13. PaymentRefunded"),
+              ("note", "ord", "14. status = CANCELLED"),
+              ("end",)],
+             col_w=230,
+             footer="Every consumer first checks its processed_events table, so a duplicate event changes nothing.")
+
+
+def seq_banking_ledger():
+    sequence("05-banking-ledger-sequence.svg", "Project 5 · Flow: withdraw money",
+             "Commands ask · the processor decides · events are facts · projections answer queries",
+             [("cus", "Customer", "user"), ("api", "command-api", "svc"), ("kafka", "Kafka", "kafka", "commands · events"),
+              ("proc", "account-processor", "svc", "Kafka Streams"), ("proj", "balance-projection", "svc"),
+              ("db", "balances DB", "db"), ("q", "query-api", "svc")],
+             [("call", "cus", "api", "1. POST /accounts/A/withdrawals {100}"),
+              ("event", "api", "kafka", "2. WithdrawMoney (key = A)"),
+              ("reply", "api", "cus", "202 {commandId}"),
+              ("event", "kafka", "proc", "3. WithdrawMoney"),
+              ("note", "proc", "4. state store: balance 500 ≥ 100 ✓"),
+              ("event", "proc", "kafka", "5. one Kafka tx: MoneyWithdrawn + ACCEPTED"),
+              ("event", "kafka", "proj", "6. MoneyWithdrawn"),
+              ("call", "proj", "db", "7. balance = 400 (version 12)"),
+              ("event", "kafka", "api", "8. command.results: ACCEPTED"),
+              ("call", "cus", "api", "9. GET /commands/{id}"),
+              ("reply", "api", "cus", "ACCEPTED"),
+              ("call", "cus", "q", "10. GET /accounts/A/balance"),
+              ("call", "q", "db", "read A"),
+              ("reply", "q", "cus", "400 (version 12)"),
+              ("section", "fail", "IF funds are too low"),
+              ("note", "proc", "4. balance 50 < 100 ✗"),
+              ("event", "proc", "kafka", "5. CommandRejected + REJECTED"),
+              ("call", "cus", "api", "GET /commands/{id}"),
+              ("reply", "api", "cus", "REJECTED: insufficient funds"),
+              ("end",),
+              ("section", "alt", "REBUILD a read model (any time)"),
+              ("event", "kafka", "proj", "replay account.events from offset 0 → balances_v2"),
+              ("end",)],
+             col_w=200)
 
 
 if __name__ == "__main__":
+    seq_product_catalog()
+    seq_url_shortener()
+    seq_notification_hub()
+    seq_order_saga()
+    seq_banking_ledger()
     product_catalog_phase_a()
     product_catalog_phase_b()
+    url_shortener()
     notification_hub()
     order_saga_architecture()
     order_saga_flow()

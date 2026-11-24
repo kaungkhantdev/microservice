@@ -1,4 +1,4 @@
-# Project 1 · Notification Hub
+# Project 3 · Notification Hub
 
 > **Publish once, notify many.**
 
@@ -27,7 +27,7 @@ event  →  router  →  channel commands  →  workers
 
 ## Architecture
 
-![Notification Hub architecture](images/01-notification-hub-architecture.svg)
+![Notification Hub architecture](images/03-notification-hub-architecture.svg)
 
 | Service | Job |
 |---------|-----|
@@ -40,6 +40,44 @@ event  →  router  →  channel commands  →  workers
 | `users.user.events`, `orders.order.events` | `userId` | Domain events |
 | `notifications.{email,sms,push}.commands` | `userId` | One job per channel |
 | `notifications.dlq` | original key | Messages that failed for good |
+
+## How it works
+
+### User stories
+
+**User side**
+
+| As a… | I want to… | So that… |
+|-------|------------|----------|
+| Customer | get an email when my order ships | I know it's on the way |
+| Customer | turn off SMS but keep emails *(stretch)* | I only get what I want |
+| Customer | never get the same email twice | I trust the messages |
+
+**Service side**
+
+| Service | Its story |
+|---------|-----------|
+| upstream service (`event-producer`) | I publish `OrderShipped` and move on. I don't know who listens. |
+| `notification-service` | I pick the channels and create one job per channel. |
+| `email-worker` | I skip jobs already sent, retry failures 3 times, then park them in the DLQ. |
+
+### Flow: order shipped → email
+
+![Notification Hub flow](images/03-notification-hub-sequence.svg)
+
+1. An upstream service sends `POST /events` with `OrderShipped` for user 7.
+2. `event-producer` publishes it to Kafka (key = user 7) and replies `202`.
+3. `notification-service` receives `OrderShipped`.
+4. It reads user 7's preferences.
+5. It publishes one command per channel (email and push).
+6. `email-worker` receives `SendEmail`.
+7. It checks whether this email was already sent.
+8. It calls the provider.
+9. It saves `SENT`.
+10. It commits the offset, *after* the work is done.
+
+**If the provider keeps failing:** 3 retries, then the message goes to `notifications.dlq` and the status is `FAILED`.
+**If the same command arrives twice:** the worker sees `SENT`, skips it and just commits.
 
 ## Scope
 
@@ -111,6 +149,13 @@ event  →  router  →  channel commands  →  workers
 | AT-6 | Stretch | Kill one Kafka broker | No data loss | NFR-3, NFR-4 |
 | AT-7 | Stretch | Opt out of SMS, then reset a password | Email is sent, SMS is skipped | FR-3 |
 
+## Testing
+
+| Type | File | What it proves |
+|------|------|----------------|
+| End-to-end | [testing/e2e/03-notification-hub.md](../testing/e2e/03-notification-hub.md) | The user stories work across all services |
+| Load (k6) | [testing/load/03-notification-hub.js](../testing/load/03-notification-hub.js) | The performance NFRs (`k6 run -e PROFILE=load …`) |
+
 ## Out of scope
 
-Real providers · auth · UI · Schema Registry and autoscaling (they come in Project 2).
+Real providers · auth · UI · Schema Registry and autoscaling (they come in Project 4).

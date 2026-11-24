@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1470" height="817" viewBox="0 0 1470 817">
+<title>Project 1 · Flow: open a product page</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker><marker id="mk-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#EF6C00" stroke="#EF6C00" stroke-width="1.2"/></marker><marker id="mk-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C62828" stroke="#C62828" stroke-width="1.2"/></marker><marker id="mk-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L9,5 L0,9" fill="#78909C" stroke="#78909C" stroke-width="1.2"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<rect x="20" y="561" width="1430" height="182" rx="10" fill="#FFEBEE" stroke="#C62828" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 1 · Flow: open a product page</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Synchronous calls through the gateway · timeout + circuit breaker protect the page</text>
+<polyline points="120,132 120,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="30.0" y="80" width="180" height="52" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="120" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">User</text>
+<polyline points="330,132 330,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="240.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="330" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">api-gateway</text>
+<polyline points="540,132 540,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="450.0" y="80" width="180" height="52" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2"/>
+<text x="540" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Eureka</text>
+<text x="540" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">registry</text>
+<polyline points="750,132 750,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="660.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="750" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">catalog-service</text>
+<polyline points="960,132 960,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="870.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="960" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">review-service</text>
+<polyline points="1170,132 1170,752" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="1080.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1170" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">user-service</text>
+<line x1="120" y1="189" x2="327" y2="189" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="225.0" y="183" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">1. GET /api/catalog/products/42/page</text>
+<line x1="330" y1="225" x2="537" y2="225" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="435.0" y="219" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">2. where is catalog-service?</text>
+<line x1="540" y1="261" x2="333" y2="261" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="435.0" y="255" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">10.1.0.7, 10.1.0.8</text>
+<line x1="330" y1="297" x2="747" y2="297" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="540.0" y="291" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">3. GET /products/42/page</text>
+<rect x="758" y="318" width="235.60000000000002" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="767" y="334" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">4. load product 42 from catalog DB</text>
+<line x1="750" y1="369" x2="957" y2="369" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="855.0" y="363" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">5. GET /reviews?productId=42 (1 s timeout)</text>
+<line x1="960" y1="405" x2="753" y2="405" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="855.0" y="399" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">2 reviews by users 7 and 9</text>
+<line x1="750" y1="441" x2="1167" y2="441" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="960.0" y="435" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">6. GET /users?ids=7,9</text>
+<line x1="1170" y1="477" x2="753" y2="477" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="960.0" y="471" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">names</text>
+<rect x="758" y="498" width="235.60000000000002" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="767" y="514" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">7. merge product + reviews + names</text>
+<line x1="750" y1="549" x2="123" y2="549" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="435.0" y="543" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">8. 200 product page</text>
+<text x="34" y="582" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#C62828" text-anchor="start">IF review-service is slow or down</text>
+<line x1="750" y1="619" x2="957" y2="619" stroke="#C62828" stroke-width="1.8" marker-end="url(#mk-red)"/>
+<text x="855.0" y="613" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#C62828" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">5. GET /reviews …  ✗ no answer within 1 s</text>
+<rect x="758" y="640" width="158.8" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="767" y="656" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">fallback: reviews = []</text>
+<rect x="758" y="676" width="434.0" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="767" y="692" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">5 of 10 calls failed → breaker OPEN: skip review-service for 10 s</text>
+<line x1="750" y1="727" x2="123" y2="727" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="435.0" y="721" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">200 page · reviewsAvailable: false</text>
+<line x1="30" y1="785" x2="62" y2="785" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="72" y="789" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">call (waits)</text>
+<line x1="181" y1="785" x2="213" y2="785" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="223" y="789" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">reply</text>
+<line x1="286" y1="785" x2="318" y2="785" stroke="#EF6C00" stroke-width="1.8" marker-end="url(#mk-orange)"/>
+<text x="328" y="789" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">Kafka event (async)</text>
+<line x1="483" y1="785" x2="515" y2="785" stroke="#C62828" stroke-width="1.8" marker-end="url(#mk-red)"/>
+<text x="525" y="789" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">failure</text>
+<rect x="601" y="776" width="34" height="18" rx="4" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="643" y="789" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">inside the service</text>
+</svg>

@@ -1,8 +1,8 @@
-# Project 0 · Product Catalog
+# Project 1 · Product Catalog
 
 > **Find it, route it, protect it.**
 
-**Level:** Beginner → Intermediate · **Core effort:** a weekend · **Do it before:** Project 1
+**Level:** Beginner → Intermediate · **Core effort:** a weekend · **Next:** Project 2
 
 ## What you build
 
@@ -32,7 +32,7 @@ client  →  gateway  →  catalog-service  →  review-service
 
 ### Compared with the Kafka projects
 
-| | Project 0: request-driven | Projects 1–3: event-driven |
+| | Project 1: request-driven | Projects 3–5: event-driven |
 |---|---|---|
 | Talk by | HTTP call, wait for the answer | Publish an event, don't wait |
 | Callee is down | Caller fails, unless you add a fallback | Events wait in Kafka |
@@ -43,11 +43,11 @@ client  →  gateway  →  catalog-service  →  review-service
 
 ### Phase A · classic Spring Cloud (docker-compose)
 
-![Product Catalog Phase A](images/00-product-catalog-phase-a.svg)
+![Product Catalog Phase A](images/01-product-catalog-phase-a.svg)
 
 ### Phase B · same apps on Kubernetes
 
-![Product Catalog Phase B](images/00-product-catalog-phase-b.svg)
+![Product Catalog Phase B](images/01-product-catalog-phase-b.svg)
 
 | Phase A (Spring Cloud) | Phase B (Kubernetes) |
 |------------------------|----------------------|
@@ -67,6 +67,43 @@ client  →  gateway  →  catalog-service  →  review-service
 | `user-service` | Users (reviewer names) |
 | `discovery-server` | Eureka registry (**Phase A only**) |
 | `config-server` | Central config from Git (**Phase A only**) |
+
+## How it works
+
+### User stories
+
+**User side**
+
+| As a… | I want to… | So that… |
+|-------|------------|----------|
+| Shopper | open one product page | I see the product, its reviews and who wrote them |
+| Shopper | still see the product when reviews are broken | one broken part doesn't break the whole page |
+| Admin | add and edit products | the catalog stays up to date |
+| Reviewer | post a review *(stretch: logged in)* | others can read my opinion |
+
+**Service side**
+
+| Service | Its story |
+|---------|-----------|
+| `api-gateway` | I'm the only public door. I route `/api/**` to the right service. |
+| `discovery-server` | I keep a live list of which service runs where. |
+| `catalog-service` | I find other services **by name**, call them with a **1 s timeout**, and use a **fallback** if they fail. |
+| `review-service`, `user-service` | I register when I start and answer fast. I know nothing about the page. |
+
+### Flow: open a product page
+
+![Product Catalog flow](images/01-product-catalog-sequence.svg)
+
+1. The user calls the gateway: `GET /api/catalog/products/42/page`.
+2. The gateway asks Eureka where `catalog-service` is.
+3. The gateway forwards the request.
+4. Catalog loads product 42 from its DB.
+5. Catalog asks `review-service` for reviews (1 s timeout).
+6. Catalog asks `user-service` for the reviewers' names.
+7. Catalog merges everything.
+8. The user gets one page.
+
+**If reviews fail:** the call stops after 1 s and the fallback returns `reviews: []`. After 5 failures in 10 calls the breaker **opens** and skips `review-service` for 10 s. The page still loads.
 
 ## Scope
 
@@ -142,10 +179,17 @@ client  →  gateway  →  catalog-service  →  review-service
 | AT-9 | Stretch | Change a config value in Git | It's picked up without a rebuild | FR-8 |
 | AT-10 | Stretch | Turn on the canary | About 10% of requests hit v2 | FR-12 |
 
+## Testing
+
+| Type | File | What it proves |
+|------|------|----------------|
+| End-to-end | [testing/e2e/01-product-catalog.md](../testing/e2e/01-product-catalog.md) | The user stories work across all services |
+| Load (k6) | [testing/load/01-product-catalog.js](../testing/load/01-product-catalog.js) | The performance NFRs (`k6 run -e PROFILE=load …`) |
+
 ## Out of scope
 
-Kafka (it starts in Project 1) · service mesh · real identity provider (a static test JWT is fine) · UI.
+Kafka (it starts in Project 2) · service mesh · real identity provider (a static test JWT is fine) · UI.
 
 ## Next
 
-AT-2 shows the weak spot of synchronous calls. **Project 1** shows the event-driven answer: when a consumer is down, events simply wait in Kafka.
+AT-2 shows the weak spot of synchronous calls. **Project 2** keeps a fast sync path but moves click counting onto Kafka. **Project 3** then goes fully event-driven: when a consumer is down, events simply wait in Kafka.
