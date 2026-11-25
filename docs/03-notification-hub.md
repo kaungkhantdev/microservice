@@ -41,6 +41,19 @@ event  →  router  →  channel commands  →  workers
 | `notifications.{email,sms,push}.commands` | `userId` | One job per channel |
 | `notifications.dlq` | original key | Messages that failed for good |
 
+## Why each piece exists
+
+> 🧠 Every piece must answer: **what breaks without me?**
+
+| Piece | What breaks without it |
+|-------|------------------------|
+| `event-producer` | Nothing in production: it's a **test stand-in** for real upstream services. |
+| Kafka | Every service would call notification code directly, and fail whenever it's down. |
+| `notification-service` (router) | Every producer would need to know user preferences and channels. |
+| One worker per channel | Providers have different speeds, limits and failures. A slow SMS provider shouldn't block emails. |
+| PostgreSQL (one server) | "Already sent?" checks and preferences need durable storage. |
+| DLQ | One bad message would block its partition forever. |
+
 ## How it works
 
 ### User stories

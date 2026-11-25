@@ -29,6 +29,11 @@ command  →  validate  →  EVENT LOG (forever)  →  projections  →  queries
 1. **One writer per account.** Key = `accountId`, so one processor handles each account in sequence, and two withdrawals can't spend the same money.
 2. **Never compact the event log.** Compaction deletes history. Compact only "latest state" topics (snapshots, command results).
 
+> 🌍 **Real-world check: is Kafka really the database?**
+> - Most real ledgers keep the source of truth in a **relational database**: a double-entry `entries` table with ACID transactions. They then **publish** events to Kafka through an outbox, as in Project 4.
+> - **Kafka as the only source of truth** works (Kafka Streams state stores, infinite retention), but it's **debated**. There are no ad-hoc queries, bad events are hard to fix, one retention mistake can delete history, and "append only if version = N" isn't built in.
+> - This project uses the Kafka-only design **on purpose**, to learn event sourcing and replay. In a real job, ask first: *do we need to replay history into new models?* If not, use the DB + outbox design from Project 4.
+
 ## Architecture
 
 ![Banking Ledger architecture](images/05-banking-ledger-architecture.svg)
@@ -49,6 +54,19 @@ command  →  validate  →  EVENT LOG (forever)  →  projections  →  queries
 | `account.snapshots` | compact | Latest state per account |
 | `command.results` | compact | `ACCEPTED` or `REJECTED` per command |
 | `transfer.events` | delete, ∞ | Transfer saga steps |
+
+## Why each piece exists
+
+> 🧠 Every piece must answer: **what breaks without me?**
+
+| Piece | What breaks without it |
+|-------|------------------------|
+| `command-api` | Clients would talk to Kafka directly, with no validation or idempotency. |
+| `account-processor` (single writer) | Two withdrawals could spend the same money. |
+| Event log with infinite retention | You can't rebuild a read model or add a new one later. |
+| Projections + `query-api` | "What's A's balance?" would mean replaying the log on every request. |
+| **One Postgres for all read models** | They're just tables (`balances_v1`, `statements`, …). Separate databases add nothing. |
+| Argo CD, mTLS, ACLs (stretch) | Platform skills real teams need, but they aren't about the ledger design. Add them last. |
 
 ## How it works
 

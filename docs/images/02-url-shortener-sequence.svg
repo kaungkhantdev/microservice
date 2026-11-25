@@ -1,73 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1590" height="979" viewBox="0 0 1590 979">
+<svg xmlns="http://www.w3.org/2000/svg" width="1470" height="979" viewBox="0 0 1470 979">
 <title>Project 2 · Flow: create, click, count</title>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker><marker id="mk-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#EF6C00" stroke="#EF6C00" stroke-width="1.2"/></marker><marker id="mk-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C62828" stroke="#C62828" stroke-width="1.2"/></marker><marker id="mk-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L9,5 L0,9" fill="#78909C" stroke="#78909C" stroke-width="1.2"/></marker></defs>
 <rect width="100%" height="100%" fill="white"/>
-<rect x="20" y="165" width="1550" height="146" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="20" y="315" width="1550" height="290" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="20" y="609" width="1550" height="182" rx="10" fill="#FFFDE7" stroke="#F9A825" stroke-width="1.2" stroke-dasharray="6 4"/>
-<rect x="20" y="795" width="1550" height="110" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="20" y="165" width="1430" height="146" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="20" y="315" width="1430" height="290" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="20" y="609" width="1430" height="182" rx="10" fill="#FFFDE7" stroke="#F9A825" stroke-width="1.2" stroke-dasharray="6 4"/>
+<rect x="20" y="795" width="1430" height="110" rx="10" fill="#F3F6FA" stroke="#546E7A" stroke-width="1.2" stroke-dasharray="6 4"/>
 <text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 2 · Flow: create, click, count</text>
-<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">The redirect answers from cache right away · the click is counted later through Kafka</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">One service answers from cache right away · the click is counted later through Kafka</text>
 <polyline points="120,132 120,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="30.5" y="80" width="179" height="52" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="7 5"/>
+<rect x="30.0" y="80" width="180" height="52" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="120" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">User</text>
-<polyline points="315,132 315,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="225.5" y="80" width="179" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="315" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">link-service</text>
-<polyline points="510,132 510,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="420.5" y="80" width="179" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="510" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">redirect-service</text>
-<polyline points="705,132 705,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="615.5" y="80" width="179" height="52" rx="10" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<text x="705" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Redis</text>
-<text x="705" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">cache</text>
-<polyline points="900,132 900,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="810.5" y="80" width="179" height="52" rx="10" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<text x="900" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
-<text x="900" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">links</text>
-<polyline points="1095,132 1095,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="1005.5" y="80" width="179" height="52" rx="10" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2"/>
-<text x="1095" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Kafka</text>
-<text x="1095" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">links.click.events</text>
-<polyline points="1290,132 1290,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
-<rect x="1200.5" y="80" width="179" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="1290" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">analytics-service</text>
+<polyline points="330,132 330,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="240.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="330" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">shortener-service</text>
+<polyline points="540,132 540,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="450.0" y="80" width="180" height="52" rx="10" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<text x="540" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Redis</text>
+<text x="540" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">cache</text>
+<polyline points="750,132 750,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="660.0" y="80" width="180" height="52" rx="10" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<text x="750" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
+<text x="750" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">links schema</text>
+<polyline points="960,132 960,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="870.0" y="80" width="180" height="52" rx="10" fill="#FFE0B2" stroke="#EF6C00" stroke-width="2"/>
+<text x="960" y="102" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Kafka</text>
+<text x="960" y="120" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">links.click.events</text>
+<polyline points="1170,132 1170,914" fill="none" stroke="#B0BEC5" stroke-width="1.4" stroke-dasharray="4 4"/>
+<rect x="1080.0" y="80" width="180" height="52" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
+<text x="1170" y="111" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">analytics-service</text>
 <text x="34" y="186" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#546E7A" text-anchor="start">A · Create a short link</text>
-<line x1="120" y1="223" x2="312" y2="223" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="217.5" y="217" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">1. POST /links {url}</text>
-<line x1="315" y1="259" x2="897" y2="259" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="607.5" y="253" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">2. save abc123 → url</text>
-<line x1="315" y1="295" x2="123" y2="295" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="217.5" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">201 {shortUrl: /abc123}</text>
+<line x1="120" y1="223" x2="327" y2="223" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="225.0" y="217" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">1. POST /links {url}</text>
+<line x1="330" y1="259" x2="747" y2="259" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="540.0" y="253" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">2. save abc123 → url</text>
+<line x1="330" y1="295" x2="123" y2="295" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="225.0" y="289" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">201 {shortUrl: /abc123}</text>
 <text x="34" y="336" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#546E7A" text-anchor="start">B · Click the link (hot path)</text>
-<line x1="120" y1="373" x2="507" y2="373" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="315.0" y="367" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">3. GET /abc123</text>
-<line x1="510" y1="409" x2="702" y2="409" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="607.5" y="403" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">4. GET abc123</text>
-<line x1="705" y1="445" x2="513" y2="445" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="607.5" y="439" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">hit: url</text>
-<line x1="510" y1="481" x2="123" y2="481" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="315.0" y="475" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">5. 302 Location: url</text>
-<line x1="510" y1="517" x2="1092" y2="517" stroke="#EF6C00" stroke-width="1.8" marker-end="url(#mk-orange)"/>
-<text x="802.5" y="511" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#BF5B00" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">6. LinkClicked (async, never waits)</text>
-<line x1="1095" y1="553" x2="1287" y2="553" stroke="#EF6C00" stroke-width="1.8" marker-end="url(#mk-orange)"/>
-<text x="1192.5" y="547" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#BF5B00" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">7. batch of clicks</text>
-<rect x="1298" y="574" width="178.0" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
-<text x="1307" y="590" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">8. clicks += n (stats DB)</text>
+<line x1="120" y1="373" x2="327" y2="373" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="225.0" y="367" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">3. GET /abc123</text>
+<line x1="330" y1="409" x2="537" y2="409" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="435.0" y="403" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">4. GET abc123</text>
+<line x1="540" y1="445" x2="333" y2="445" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="435.0" y="439" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">hit: url</text>
+<line x1="330" y1="481" x2="123" y2="481" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="225.0" y="475" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">5. 302 Location: url</text>
+<line x1="330" y1="517" x2="957" y2="517" stroke="#EF6C00" stroke-width="1.8" marker-end="url(#mk-orange)"/>
+<text x="645.0" y="511" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#BF5B00" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">6. LinkClicked (async, never waits)</text>
+<line x1="960" y1="553" x2="1167" y2="553" stroke="#EF6C00" stroke-width="1.8" marker-end="url(#mk-orange)"/>
+<text x="1065.0" y="547" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#BF5B00" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">7. batch of clicks</text>
+<rect x="1178" y="574" width="203.60000000000002" height="24" rx="5" fill="#FFFDE7" stroke="#FBC02D" stroke-width="1.2"/>
+<text x="1187" y="590" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="start">8. clicks += n (stats schema)</text>
 <text x="34" y="630" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#F9A825" text-anchor="start">IF the code is not in the cache (miss)</text>
-<line x1="705" y1="667" x2="513" y2="667" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="607.5" y="661" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">miss</text>
-<line x1="510" y1="703" x2="897" y2="703" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="705.0" y="697" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">read abc123</text>
-<line x1="900" y1="739" x2="513" y2="739" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="705.0" y="733" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">url</text>
-<line x1="510" y1="775" x2="702" y2="775" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="607.5" y="769" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">SET abc123 (TTL 1 h)</text>
+<line x1="540" y1="667" x2="333" y2="667" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="435.0" y="661" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">miss</text>
+<line x1="330" y1="703" x2="747" y2="703" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="540.0" y="697" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">read abc123</text>
+<line x1="750" y1="739" x2="333" y2="739" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="540.0" y="733" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">url</text>
+<line x1="330" y1="775" x2="537" y2="775" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="435.0" y="769" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">SET abc123 (TTL 1 h)</text>
 <text x="34" y="816" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#546E7A" text-anchor="start">C · See the stats</text>
-<line x1="120" y1="853" x2="1287" y2="853" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="705.0" y="847" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">9. GET /links/abc123/stats</text>
-<line x1="1290" y1="889" x2="123" y2="889" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
-<text x="705.0" y="883" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">200 {clicks: 1}</text>
+<line x1="120" y1="853" x2="1167" y2="853" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="645.0" y="847" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="bold" fill="#212121" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">9. GET /links/abc123/stats</text>
+<line x1="1170" y1="889" x2="123" y2="889" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>
+<text x="645.0" y="883" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">200 {clicks: 1}</text>
 <line x1="30" y1="947" x2="62" y2="947" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="72" y="951" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#212121" text-anchor="start">call (waits)</text>
 <line x1="181" y1="947" x2="213" y2="947" stroke="#78909C" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#mk-grey)"/>

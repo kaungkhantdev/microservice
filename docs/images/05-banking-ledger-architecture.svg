@@ -63,7 +63,7 @@
 <path d="M400,583 A80.0,10 0 0 1 560,583 V645 A80.0,10 0 0 1 400,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
 <ellipse cx="480.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
 <text x="480.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">balances_v1</text>
-<text x="480.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL / Redis</text>
+<text x="480.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">table · PostgreSQL</text>
 <polyline points="700.0,425 700.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="600" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="700.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">statement-projection</text>
@@ -75,7 +75,7 @@
 <path d="M620,583 A80.0,10 0 0 1 780,583 V645 A80.0,10 0 0 1 620,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <ellipse cx="700.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="700.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">statements</text>
-<text x="700.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<text x="700.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">table · PostgreSQL</text>
 <polyline points="920.0,425 920.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="820" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="920.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">audit-projection</text>
@@ -87,7 +87,7 @@
 <path d="M840,583 A80.0,10 0 0 1 1000,583 V645 A80.0,10 0 0 1 840,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <ellipse cx="920.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="920.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">audit</text>
-<text x="920.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">OpenSearch</text>
+<text x="920.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">OpenSearch (or a table)</text>
 <polyline points="1140.0,425 1140.0,455" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="1040" y="455" width="200" height="80" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="1140.0" y="484.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">new read model</text>
@@ -99,7 +99,7 @@
 <path d="M1060,583 A80.0,10 0 0 1 1220,583 V645 A80.0,10 0 0 1 1060,645 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <ellipse cx="1140.0" cy="583" rx="80.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="1140.0" y="615.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">new_model_v2</text>
-<text x="1140.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<text x="1140.0" y="633.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">table · PostgreSQL</text>
 <rect x="25" y="645" width="130" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
 <text x="90.0" y="671.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
 <text x="90.0" y="690.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">queries (HTTP)</text>

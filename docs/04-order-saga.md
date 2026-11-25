@@ -8,19 +8,19 @@
 
 An order moves through **order → payment → inventory → shipping**. There's no shared database and no distributed transaction, only events. If a step fails, the earlier steps are undone with **compensating events**.
 
-**You learn:** sagas, the transactional outbox, Debezium CDC, Schema Registry and retry topics on Kafka, plus Helm, KEDA, PDBs and graceful shutdown on Kubernetes.
+**You learn:** sagas, the transactional outbox (polling relay; Debezium CDC as stretch), Schema Registry and retry topics on Kafka, plus Helm, KEDA, PDBs and graceful shutdown on Kubernetes.
 
 ## Event-driven architecture
 
 **Style:** choreographed saga + transactional outbox
 
 ```
-save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + outbox …
+save + outbox  →  relay  →  Kafka  →  next service reacts  →  save + outbox …
 ```
 
 - **Nobody calls anybody.** Each service reacts to an event and emits the next one.
 - **Failure is just another event.** `StockUnavailable` → `PaymentRefunded` → `OrderCancelled`.
-- **The outbox keeps the database and Kafka in sync.** Data and event are saved in one DB transaction, and Debezium ships the event.
+- **The outbox keeps the database and Kafka in sync.** Data and event are saved in one DB transaction, and a relay ships the event to Kafka.
 
 > 🧠 **Remember:** *Outbox in. Idempotent out. Compensate on failure.*
 > Save and publish together · process each event once · undo with events, not rollbacks.
@@ -31,10 +31,10 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 
 | Service | Owns | Job |
 |---------|------|-----|
-| `order-service` | orders DB | API, order status, timeout |
-| `payment-service` | payments DB | Charge and refund (fake gateway) |
-| `inventory-service` | inventory DB | Reserve and release stock |
-| `shipping-service` | shipping DB | Book shipment (fake carrier) |
+| `order-service` | `orders` schema | API, order status, timeout |
+| `payment-service` | `payments` schema | Charge and refund (fake gateway) |
+| `inventory-service` | `inventory` schema | Reserve and release stock |
+| `shipping-service` | `shipping` schema | Book shipment (fake carrier) |
 | `notification-service` | (Project 3) | Tell the customer |
 
 ## Saga flow
@@ -44,6 +44,21 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 **Order status:** `PENDING → PAYMENT_AUTHORIZED → STOCK_RESERVED → SHIPPING_SCHEDULED → COMPLETED`, or `… → COMPENSATING → CANCELLED`.
 
 **Topics:** one per service (`orders.order.events`, `payments.payment.events`, `inventory.stock.events`, `shipping.shipment.events`), all keyed by `orderId`.
+
+## Why each piece exists
+
+> 🧠 Every piece must answer: **what breaks without me?**
+
+| Piece | What breaks without it |
+|-------|------------------------|
+| order, payment, inventory services | They're different business capabilities, usually owned by different teams. |
+| **One Postgres, schema per service** | Each service owns its data. Separate servers add ops work and teach nothing new. |
+| Outbox table | "Saved to the DB, but the event was lost" (the dual-write problem). |
+| **Polling relay** (core) | Something must move outbox rows to Kafka. A `@Scheduled` job is the simplest way, and common in production. |
+| Debezium (stretch) | Lower latency and no polling load, but you have to run Kafka Connect. Add it when polling becomes a bottleneck. |
+| `processed_events` table | A redelivered event would charge or reserve twice. |
+| Schema Registry (stretch) | A producer change can silently break consumers. |
+| KEDA (stretch) | Consumers fall behind during bursts. |
 
 ## How it works
 
@@ -65,7 +80,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | `order-service` | I save the order and its event in **one transaction** (outbox) and track the status. |
 | `payment-service` | I charge on `OrderCreated` and refund on `StockUnavailable`. |
 | `inventory-service` | I reserve all items or none. |
-| Debezium | I copy new outbox rows to Kafka. |
+| outbox relay (inside each service) | Every 200 ms I publish new outbox rows to Kafka and mark them sent. |
 | every service | I skip events I've already processed. |
 
 ### Flow: place an order
@@ -74,7 +89,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 
 1. The customer sends `POST /orders`.
 2. `order-service` saves the order (`PENDING`) and `OrderCreated` in one transaction, then replies `202`.
-3. Debezium publishes `OrderCreated`.
+3. The outbox relay publishes `OrderCreated`.
 4. `payment-service` receives it.
 5. It authorizes the payment and saves it with its outbox event.
 6. It publishes `PaymentAuthorized`.
@@ -89,15 +104,16 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 
 ## Scope
 
-- **Core:** order, payment and inventory with outbox + Debezium. Happy path, plus two failures: payment declined, and out of stock → refund. One Helm chart. Pass AT-1 to AT-3.
-- **Stretch:** shipping, customer cancel, timeout, retry topics, Schema Registry, notifications, KEDA, PDBs.
+- **Core:** order, payment and inventory in one Postgres (schema per service), with outbox + polling relay. Happy path, plus two failures: payment declined, and out of stock → refund. One Helm chart. Pass AT-1 to AT-3.
+- **Stretch:** Debezium CDC, shipping, customer cancel, timeout, retry topics, Schema Registry, notifications, KEDA, PDBs.
 
 ## Spring Boot building blocks
 
 | Need | Use |
 |------|-----|
 | Outbox | One `@Transactional` method saves the entity **and** an `OutboxEvent` row |
-| CDC | Strimzi `KafkaConnector` + Debezium `EventRouter` SMT (Postgres `wal_level=logical`) |
+| Outbox relay (core) | `@Scheduled(fixedDelay = 200)`: `SELECT … FOR UPDATE SKIP LOCKED LIMIT 100` → `KafkaTemplate.send(…).get()` → mark sent |
+| CDC (stretch) | Strimzi `KafkaConnector` + Debezium `EventRouter` SMT (Postgres `wal_level=logical`) replaces the relay |
 | Idempotent consumer | `@KafkaListener` + `@Transactional`: insert `processed_events(event_id)` and apply the change together |
 | Retry topics | `@RetryableTopic` + `@DltHandler` |
 | Schemas | `avro-maven-plugin` + Apicurio or Confluent serde |
@@ -108,6 +124,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 > ⚠️ **Gotchas**
 > - **`@RetryableTopic` breaks per-key ordering.** A retried event can arrive after a newer one. Check the order's state in the handler, or use blocking retries.
 > - **Outbox + Avro is awkward.** Start with JSON in the outbox.
+> - **The relay is at-least-once.** A crash after sending but before "mark sent" publishes the event twice. That's why every consumer must be idempotent.
 
 ## Functional requirements
 
@@ -122,7 +139,7 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | **FR-7** | Stretch | **Undo when shipping fails:** release stock + refund → `CANCELLED`. |
 | **FR-8** | Stretch | **Customer cancel:** allowed before shipping; runs the needed undos. |
 | **FR-9** | Stretch | **Timeout:** stuck for over 2 min → cancel + undo. |
-| **FR-10** | **Core** | **Outbox:** state and event in one DB transaction, published by Debezium. No direct `KafkaTemplate`. |
+| **FR-10** | **Core** | **Outbox:** state and event in one DB transaction. A polling relay publishes outbox rows (Debezium in stretch). Business code never calls `KafkaTemplate` directly. |
 | **FR-11** | Stretch | **Retry topics:** `retry-5s` → `retry-1m` → `dlq`. |
 | **FR-12** | Stretch | **Schemas:** Avro or Protobuf in Schema Registry, `BACKWARD` compatible. |
 | **FR-13** | Stretch | **Notify:** completed or cancelled → Project 3 sends a message. |
@@ -143,9 +160,9 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 | **NFR-9** | Stretch | Availability | **PDBs:** a node drain never takes a service fully down. |
 | **NFR-10** | Stretch | Ops | **Graceful stop:** finish, commit and close in under 30 s. |
 | **NFR-11** | **Core** | Ops | **Helm:** one umbrella chart, dev/prod values, zero-downtime upgrade. |
-| **NFR-12** | Stretch | Ops | **Infra as CRs:** topics, Connect and connectors as Strimzi resources. |
+| **NFR-12** | Stretch | Ops | **Infra as CRs:** topics (and Kafka Connect, if you add Debezium) as Strimzi resources. |
 | **NFR-13** | Stretch | Ops | **Safe schema changes:** adding an optional field breaks no consumer. |
-| **NFR-14** | **Core** | Design | **DB per service:** no service reads another's DB. |
+| **NFR-14** | **Core** | Design | **Data per service:** one Postgres, one schema + login per service. No service reads another's schema. |
 | **NFR-15** | Stretch | Observability | **Trace by `orderId`** in logs and Kafka headers. |
 | **NFR-16** | Stretch | Observability | **Saga metrics:** duration, cancels by reason, lag, DLQ depth. |
 | **NFR-17** | Stretch | Security | **Own credentials:** each service only has its own DB secret. |
@@ -156,13 +173,14 @@ save + outbox  →  Debezium  →  Kafka  →  next service reacts  →  save + 
 |---|-------|---------|-----------|--------|
 | AT-1 | **Core** | Kill `payment-service` with 100 orders in flight | All orders finish and the invariants pass | NFR-1, NFR-2, NFR-4 |
 | AT-2 | **Core** | Send 1,000 orders: 10% out of stock, 5% declined | Counts are correct and every cancel is refunded | FR-6, NFR-2 |
-| AT-3 | **Core** | Pause Debezium for 2 min | Nothing is lost after resume | FR-10, NFR-3 |
+| AT-3 | **Core** | Make Kafka unreachable for 2 min while orders come in | Orders are still accepted (the outbox fills up), and every event is published once Kafka is back | FR-10, NFR-3 |
 | AT-4 | Stretch | Burst 2,000 orders in 10 s | KEDA scales up, lag drains, then it scales down | NFR-8 |
 | AT-5 | Stretch | Register a breaking schema | The registry rejects it | FR-12 |
 | AT-6 | Stretch | Add an optional `giftMessage` field | Old consumers still work | NFR-13 |
 | AT-7 | Stretch | Drain a node | Services stay up, no order gets stuck | NFR-9 |
 | AT-8 | Stretch | Inject 30% inventory errors | Retry tiers work, and the rest go to the DLQ | FR-11 |
 | AT-9 | Stretch | Cancel an order at `STOCK_RESERVED` | Stock released, payment refunded, order `CANCELLED` | FR-8 |
+| AT-10 | Stretch | Replace the polling relay with Debezium CDC | AT-1 to AT-3 still pass | FR-10 |
 
 ## Testing
 

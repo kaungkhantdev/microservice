@@ -50,8 +50,8 @@
 <path d="M620,460 A85.0,10 0 0 1 790,460 V535 A85.0,10 0 0 1 620,535 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
 <ellipse cx="705.0" cy="460" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
 <text x="705.0" y="491.5" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
-<text x="705.0" y="510.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">StatefulSet</text>
-<text x="705.0" y="524.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">one DB per service</text>
+<text x="705.0" y="510.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">StatefulSet · one server</text>
+<text x="705.0" y="524.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">schema per service</text>
 <polyline points="705,375 705,450" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <polyline points="950,450 791,492" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <polyline points="1150,240 1165,240 1165,590 730,590 730,546" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>

@@ -3,10 +3,10 @@
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#455A64"/></marker><marker id="arrowStart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#455A64"/></marker><marker id="mk-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#EF6C00" stroke="#EF6C00" stroke-width="1.2"/></marker><marker id="mk-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C62828" stroke="#C62828" stroke-width="1.2"/></marker><marker id="mk-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L9,5 L0,9" fill="#78909C" stroke="#78909C" stroke-width="1.2"/></marker></defs>
 <rect width="100%" height="100%" fill="white"/>
 <text x="30" y="38" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#212121" text-anchor="start">Project 4 · E-commerce Order Saga</text>
-<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Database per service · transactional outbox → Debezium CDC → Kafka → idempotent consumers</text>
+<text x="30" y="58" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#616161" text-anchor="start">Schema per service · transactional outbox → polling relay → Kafka → idempotent consumers</text>
 <rect x="170" y="70" width="1360" height="740" rx="16" fill="none" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="186" y="92" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#326CE5" text-anchor="start">Kubernetes cluster (kind)</text>
-<text x="186" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">namespace: shop · one Helm umbrella chart · PodDisruptionBudgets · Kafka &amp; Connect via Strimzi</text>
+<text x="186" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">namespace: shop · one Helm umbrella chart · PodDisruptionBudgets · Kafka via Strimzi</text>
 <rect x="200" y="125" width="1080" height="135" rx="12" fill="#FFF8EE" stroke="#FFB74D" stroke-width="1.4"/>
 <text x="214" y="144" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#BF5B00" text-anchor="start">Kafka cluster (Strimzi) · key = orderId · RF=3</text>
 <rect x="210" y="160" width="190" height="32" rx="16.0" fill="#FFE0B2" stroke="#EF6C00" stroke-width="1.6"/>
@@ -19,7 +19,7 @@
 <text x="935.0" y="180.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">shipping.shipment.events</text>
 <rect x="1050" y="160" width="190" height="32" rx="16.0" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6" stroke-dasharray="7 5"/>
 <text x="1145.0" y="180.0" font-family="Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#212121" text-anchor="middle">retry-5s · retry-1m · dlq</text>
-<text x="216" y="238" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">Topics are written by Debezium from each service&#x27;s outbox table, and consumed with @KafkaListener (idempotent: processed_events table).</text>
+<text x="216" y="238" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="start">Each service&#x27;s outbox relay publishes here. Consumers use @KafkaListener and skip duplicates (processed_events).</text>
 <rect x="1310" y="135" width="195" height="80" rx="10" fill="#EDE7F6" stroke="#5E35B1" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="1407.5" y="164.0" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Schema Registry</text>
 <text x="1407.5" y="183.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">Apicurio / Confluent</text>
@@ -27,82 +27,68 @@
 <rect x="1442" y="128" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
 <text x="1471.5" y="140" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
 <polyline points="1280,175 1310,175" fill="none" stroke="#455A64" stroke-width="1.4" stroke-dasharray="4 4"/>
-<polyline points="305.0,260 305.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="297.0" y="325" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="end" stroke="white" stroke-width="4" paint-order="stroke">consume</text>
-<polyline points="515.0,260 515.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="725.0,260 725.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="935.0,260 935.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="1145.0,260 1145.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="275.0,260 275.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="267.0" y="325" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="end" stroke="white" stroke-width="4" paint-order="stroke">consume</text>
+<polyline points="335.0,380 335.0,261" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="343.0" y="325" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">publish (relay)</text>
+<polyline points="485.0,260 485.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="545.0,380 545.0,261" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="695.0,260 695.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="755.0,380 755.0,261" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="905.0,260 905.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="965.0,380 965.0,261" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1115.0,260 1115.0,380" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="25" y="400" width="120" height="60" rx="10" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.6" stroke-dasharray="7 5"/>
 <text x="85.0" y="426.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">Client</text>
 <text x="85.0" y="445.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">POST /orders</text>
 <polyline points="145,430 210,430" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="210" y="380" width="190" height="100" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="305.0" y="411.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">order-service</text>
-<text x="305.0" y="430.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST + JPA</text>
-<text x="305.0" y="446.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumes: payment, stock,</text>
-<text x="305.0" y="461.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">shipment events</text>
+<text x="305.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">order-service</text>
+<text x="305.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · REST + JPA</text>
+<text x="305.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">outbox relay (@Scheduled)</text>
 <rect x="420" y="380" width="190" height="100" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="515.0" y="411.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">payment-service</text>
-<text x="515.0" y="430.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · fake gateway</text>
-<text x="515.0" y="446.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumes: order, stock,</text>
-<text x="515.0" y="461.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">shipment events</text>
+<text x="515.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">payment-service</text>
+<text x="515.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · fake gateway</text>
+<text x="515.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">outbox relay (@Scheduled)</text>
 <rect x="630" y="380" width="190" height="100" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2"/>
-<text x="725.0" y="411.25" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">inventory-service</text>
-<text x="725.0" y="430.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · JPA</text>
-<text x="725.0" y="446.25" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumes: payment,</text>
-<text x="725.0" y="461.75" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">shipment events</text>
+<text x="725.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">inventory-service</text>
+<text x="725.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · JPA</text>
+<text x="725.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">outbox relay (@Scheduled)</text>
 <rect x="840" y="380" width="190" height="100" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="935.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">shipping-service</text>
 <text x="935.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">Spring Boot · fake carrier</text>
-<text x="935.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumes: stock events</text>
+<text x="935.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">outbox relay (@Scheduled)</text>
 <rect x="967" y="373" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
 <text x="996.5" y="385" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
 <rect x="1050" y="380" width="190" height="100" rx="10" fill="#E8F5E9" stroke="#43A047" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="1145.0" y="419.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#212121" text-anchor="middle">notification-service</text>
 <text x="1145.0" y="438.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#2E7D32" text-anchor="middle">from Project 3</text>
-<text x="1145.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumes: order events</text>
+<text x="1145.0" y="454.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#616161" text-anchor="middle">consumer only</text>
 <rect x="1177" y="373" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
 <text x="1206.5" y="385" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
 <polyline points="305.0,480 305.0,530" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="313.0" y="509" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">1 local tx: state + outbox row</text>
-<path d="M220,540 A85.0,10 0 0 1 390,540 V620 A85.0,10 0 0 1 220,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="305.0" cy="540" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="305.0" y="574.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">orders DB</text>
-<text x="305.0" y="592.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">orders · outbox</text>
-<text x="305.0" y="607.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">processed_events</text>
 <polyline points="515.0,480 515.0,530" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M430,540 A85.0,10 0 0 1 600,540 V620 A85.0,10 0 0 1 430,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="515.0" cy="540" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="515.0" y="574.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">payments DB</text>
-<text x="515.0" y="592.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">payments · outbox</text>
-<text x="515.0" y="607.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">processed_events</text>
 <polyline points="725.0,480 725.0,530" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M640,540 A85.0,10 0 0 1 810,540 V620 A85.0,10 0 0 1 640,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="725.0" cy="540" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="725.0" y="574.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">inventory DB</text>
-<text x="725.0" y="592.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">stock · outbox</text>
-<text x="725.0" y="607.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">processed_events</text>
 <polyline points="935.0,480 935.0,530" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M850,540 A85.0,10 0 0 1 1020,540 V620 A85.0,10 0 0 1 850,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
-<ellipse cx="935.0" cy="540" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
-<text x="935.0" y="574.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">shipping DB</text>
-<text x="935.0" y="592.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">shipments · outbox</text>
-<text x="935.0" y="607.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">processed_events</text>
+<path d="M220,540 A400.0,10 0 0 1 1020,540 V620 A400.0,10 0 0 1 220,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="620.0" cy="540" rx="400.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="620.0" y="574.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL · one server</text>
+<text x="620.0" y="592.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">schema per service, own login: orders · payments · inventory · shipping</text>
+<text x="620.0" y="607.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">each schema: business tables + outbox + processed_events</text>
 <polyline points="1145.0,480 1145.0,530" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <path d="M1060,540 A85.0,10 0 0 1 1230,540 V620 A85.0,10 0 0 1 1060,620 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
 <ellipse cx="1145.0" cy="540" rx="85.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2" stroke-dasharray="7 5"/>
-<text x="1145.0" y="581.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">notifications DB</text>
+<text x="1145.0" y="581.25" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">notifications</text>
 <text x="1145.0" y="599.75" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">from Project 3</text>
-<rect x="210" y="680" width="820" height="62" rx="10" fill="#F3E5F5" stroke="#8E24AA" stroke-width="2"/>
-<text x="620.0" y="707.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Kafka Connect + Debezium   (Strimzi KafkaConnect / KafkaConnector)</text>
-<text x="620.0" y="726.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">Postgres CDC via logical replication (WAL) · Outbox Event Router SMT routes each row to its topic</text>
-<polyline points="305.0,630 305.0,680" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="313.0" y="660" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">CDC</text>
-<polyline points="515.0,630 515.0,680" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="725.0,630 725.0,680" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="935.0,630 935.0,680" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<polyline points="1030,711 1265,711 1265,261" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="210" y="680" width="820" height="62" rx="10" fill="#F3E5F5" stroke="#8E24AA" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="620.0" y="707.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">Stretch: Kafka Connect + Debezium (replaces the polling relay)</text>
+<text x="620.0" y="726.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#616161" text-anchor="middle">reads the outbox via Postgres CDC (WAL) · Outbox Event Router SMT routes rows to topics</text>
+<rect x="967" y="673" width="59" height="16" rx="4" fill="#FFF9C4" stroke="#F9A825" stroke-width="1"/>
+<text x="996.5" y="685" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#8D6E00" text-anchor="middle">STRETCH</text>
+<polyline points="620,630 620,680" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<text x="628" y="660" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">CDC</text>
+<polyline points="1030,711 1265,711 1265,261" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
 <text x="1272" y="600" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">publish</text>
 <rect x="1310" y="380" width="195" height="100" rx="10" fill="#E1F5FE" stroke="#0277BD" stroke-width="2" stroke-dasharray="7 5"/>
 <text x="1407.5" y="411.5" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#212121" text-anchor="middle">KEDA</text>

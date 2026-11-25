@@ -283,9 +283,9 @@ def notification_hub():
 def order_saga_architecture():
     s = Svg(1560, 900, "Project 4 - Order Saga architecture")
     s.heading("Project 4 · E-commerce Order Saga",
-              "Database per service · transactional outbox → Debezium CDC → Kafka → idempotent consumers")
+              "Schema per service · transactional outbox → polling relay → Kafka → idempotent consumers")
     s.boundary(170, 70, 1360, 740, "Kubernetes cluster (kind)",
-               "namespace: shop · one Helm umbrella chart · PodDisruptionBudgets · Kafka & Connect via Strimzi")
+               "namespace: shop · one Helm umbrella chart · PodDisruptionBudgets · Kafka via Strimzi")
 
     cols = [210, 420, 630, 840, 1050]
     cw = 190
@@ -298,53 +298,51 @@ def order_saga_architecture():
     for (name, st), c in zip(topics, cols):
         s.topic(c, 160, cw, name, h=32, stretch=st)
     s.topic(cols[4], 160, cw, "retry-5s · retry-1m · dlq", h=32, kind="dlq", stretch=True)
-    s.text(216, 238, "Topics are written by Debezium from each service's outbox table, "
-                     "and consumed with @KafkaListener (idempotent: processed_events table).",
-           size=11, fill=C["muted"], anchor="start")
+    s.text(216, 238, "Each service's outbox relay publishes here. Consumers use @KafkaListener and skip "
+                     "duplicates (processed_events).", size=11, fill=C["muted"], anchor="start")
 
-    # Schema registry
     s.infra(1310, 135, 195, 80, "Schema Registry", ["Apicurio / Confluent", "Avro / Protobuf schemas"],
             stretch=True)
     s.line([(1280, 175), (1310, 175)])
 
-    # consume arrows
+    # consume (down) + publish (up) per service
     for i, c in enumerate(centers):
-        s.arrow([(c, 260), (c, 380)], "consume" if i == 0 else None, (c - 8, 325) if i == 0 else None,
-                label_anchor="end")
+        s.arrow([(c - 30, 260), (c - 30, 380)], "consume" if i == 0 else None,
+                (c - 38, 325) if i == 0 else None, label_anchor="end")
+        if i < 4:
+            s.arrow([(c + 30, 380), (c + 30, 261)], "publish (relay)" if i == 0 else None,
+                    (c + 38, 325) if i == 0 else None, label_anchor="start")
 
-    # client
     s.ext(25, 400, 120, 60, "Client", ["POST /orders"])
     s.arrow([(145, 430), (210, 430)])
 
     services = [
-        ("order-service", ["Spring Boot · REST + JPA", "consumes: payment, stock,", "shipment events"], False),
-        ("payment-service", ["Spring Boot · fake gateway", "consumes: order, stock,", "shipment events"], False),
-        ("inventory-service", ["Spring Boot · JPA", "consumes: payment,", "shipment events"], False),
-        ("shipping-service", ["Spring Boot · fake carrier", "consumes: stock events"], True),
-        ("notification-service", ["from Project 3", "consumes: order events"], True),
+        ("order-service", ["Spring Boot · REST + JPA", "outbox relay (@Scheduled)"], False),
+        ("payment-service", ["Spring Boot · fake gateway", "outbox relay (@Scheduled)"], False),
+        ("inventory-service", ["Spring Boot · JPA", "outbox relay (@Scheduled)"], False),
+        ("shipping-service", ["Spring Boot · fake carrier", "outbox relay (@Scheduled)"], True),
+        ("notification-service", ["from Project 3", "consumer only"], True),
     ]
     for (name, lines, st), x in zip(services, cols):
         s.service(x, 380, cw, 100, name, lines, stretch=st)
 
-    dbs = [("orders DB", ["orders · outbox", "processed_events"], False),
-           ("payments DB", ["payments · outbox", "processed_events"], False),
-           ("inventory DB", ["stock · outbox", "processed_events"], False),
-           ("shipping DB", ["shipments · outbox", "processed_events"], True),
-           ("notifications DB", ["from Project 3"], True)]
-    for i, ((name, lines, st), x) in enumerate(zip(dbs, cols)):
+    # one Postgres, schema per service
+    for i in range(4):
         s.arrow([(centers[i], 480), (centers[i], 530)],
                 "1 local tx: state + outbox row" if i == 0 else None,
                 (centers[i] + 8, 509) if i == 0 else None, label_anchor="start")
-        s.db(x + 10, 530, cw - 20, 100, name, lines, stretch=st)
+    s.db(220, 530, 800, 100, "PostgreSQL · one server",
+         ["schema per service, own login: orders · payments · inventory · shipping",
+          "each schema: business tables + outbox + processed_events"])
+    s.arrow([(centers[4], 480), (centers[4], 530)])
+    s.db(1060, 530, 170, 100, "notifications", ["from Project 3"], stretch=True)
 
-    # Debezium
-    s.infra(210, 680, 820, 62, "Kafka Connect + Debezium   (Strimzi KafkaConnect / KafkaConnector)",
-            ["Postgres CDC via logical replication (WAL) · Outbox Event Router SMT routes each row to its topic"],
-            fill="#F3E5F5", stroke="#8E24AA")
-    for i in range(4):
-        s.arrow([(centers[i], 630), (centers[i], 680)], "CDC" if i == 0 else None,
-                (centers[i] + 8, 660) if i == 0 else None, label_anchor="start")
-    s.arrow([(1030, 711), (1265, 711), (1265, 261)], "publish", (1272, 600), label_anchor="start")
+    # Debezium as the stretch alternative to the relay
+    s.infra(210, 680, 820, 62, "Stretch: Kafka Connect + Debezium (replaces the polling relay)",
+            ["reads the outbox via Postgres CDC (WAL) · Outbox Event Router SMT routes rows to topics"],
+            fill="#F3E5F5", stroke="#8E24AA", stretch=True)
+    s.arrow([(620, 630), (620, 680)], "CDC", (628, 660), dash=True, label_anchor="start")
+    s.arrow([(1030, 711), (1265, 711), (1265, 261)], "publish", (1272, 600), dash=True, label_anchor="start")
 
     # KEDA
     s.infra(1310, 380, 195, 100, "KEDA", ["ScaledObject per consumer", "scales Deployments", "on consumer-group lag"],
@@ -474,8 +472,8 @@ def banking_ledger():
         ("audit-projection", ["Spring Boot · @KafkaListener", "incl. rejected commands"], True),
         ("new read model", ["added \"6 months later\"", "replay from offset 0 · blue/green"], True),
     ]
-    stores = [("balances_v1", ["PostgreSQL / Redis"], False), ("statements", ["PostgreSQL"], True),
-              ("audit", ["OpenSearch"], True), ("new_model_v2", ["PostgreSQL"], True)]
+    stores = [("balances_v1", ["table · PostgreSQL"], False), ("statements", ["table · PostgreSQL"], True),
+              ("audit", ["OpenSearch (or a table)"], True), ("new_model_v2", ["table · PostgreSQL"], True)]
     for (name, lines, st), (sn, sl, sst), x, c in zip(projections, stores, cols, centers):
         s.arrow([(c, 425), (c, 455)])
         s.service(x, 455, cw, 80, name, lines, stretch=st)
@@ -545,13 +543,12 @@ def product_catalog_phase_a():
     s.arrow([(830, 360), (880, 272)], "HTTP", (850, 305))
     s.arrow([(830, 380), (880, 478)], "HTTP", (850, 440))
 
-    # databases
-    s.arrow([(575, 415), (575, 450)])
-    s.db(500, 450, 150, 85, "catalog DB", ["PostgreSQL"])
-    s.arrow([(1080, 270), (1120, 270)])
-    s.db(1120, 228, 150, 85, "reviews DB", ["PostgreSQL"])
-    s.arrow([(1080, 480), (1120, 480)])
-    s.db(1120, 438, 150, 85, "users DB", ["PostgreSQL"])
+    # one PostgreSQL server, one schema per service
+    s.db(1115, 225, 165, 300, "PostgreSQL", ["one server", "schema per service:", "catalog", "reviews", "users",
+                                             "(own login each)"])
+    s.arrow([(1080, 270), (1114, 270)])
+    s.arrow([(1080, 480), (1114, 480)])
+    s.arrow([(575, 415), (575, 545), (1197, 545), (1197, 526)], label="catalog schema", at=(700, 539))
 
     # discovery lines
     s.arrow([(300, 325), (300, 145), (470, 145)], dash=True, label="lookup", at=(310, 240),
@@ -600,7 +597,7 @@ def product_catalog_phase_b():
     s.arrow([(930, 320), (950, 245)])
     s.arrow([(930, 340), (950, 425)])
 
-    s.db(620, 450, 170, 95, "PostgreSQL", ["StatefulSet", "one DB per service"])
+    s.db(620, 450, 170, 95, "PostgreSQL", ["StatefulSet · one server", "schema per service"])
     s.arrow([(705, 375), (705, 450)])
     s.arrow([(950, 450), (791, 492)])
     s.arrow([(1150, 240), (1165, 240), (1165, 590), (730, 590), (730, 546)])
@@ -639,9 +636,8 @@ def product_catalog_phase_b():
 def url_shortener():
     s = Svg(1500, 790, "Project 2 - URL Shortener architecture")
     s.heading("Project 2 · URL Shortener",
-              "Sync hot path (redirect from cache) + async analytics (click events through Kafka)")
-    s.boundary(170, 75, 1095, 650, "Kubernetes cluster (kind)",
-               "namespace: shortener")
+              "One stateless service for create + redirect (cache first) · clicks counted later through Kafka")
+    s.boundary(170, 75, 1095, 650, "Kubernetes cluster (kind)", "namespace: shortener")
 
     # zones
     s.rect(400, 262, 530, 145, "#F1F8E9", "none", rx=14, sw=0)
@@ -653,19 +649,15 @@ def url_shortener():
     # entry
     s.ext(20, 300, 120, 70, "Client", ["browser / API"])
     s.arrow([(140, 335), (200, 335)])
-    s.infra(200, 280, 140, 110, "Ingress", ["/links → link", "/{code} → redirect", "/stats → analytics"],
+    s.infra(200, 280, 140, 110, "Ingress", ["/links → shortener", "/{code} → shortener", "/stats → analytics"],
             fill="#E1F5FE", stroke="#0277BD")
+    s.arrow([(340, 340), (420, 340)])
 
-    # link creation
-    s.arrow([(340, 300), (420, 160)], "POST /links", (372, 220), label_anchor="end")
-    s.service(420, 110, 210, 80, "link-service", ["Spring Boot · REST + JPA", "POST /links · Base62 code"])
-    s.arrow([(630, 150), (740, 150)], "save", (685, 143))
-    s.db(740, 105, 170, 90, "PostgreSQL", ["links: code → url"])
-
-    # redirect
-    s.arrow([(340, 340), (420, 340)], "GET /{code}", (380, 332))
-    s.service(420, 290, 210, 100, "redirect-service",
-              ["Spring Boot · HPA 2–10 pods", "GET /{code} → 302", "fires click event (async)"])
+    # the one service
+    s.service(420, 290, 210, 100, "shortener-service",
+              ["Spring Boot · HPA 2–10 pods", "POST /links · GET /{code} → 302", "fires click event (async)"])
+    s.arrow([(480, 290), (480, 150), (740, 150)], "save new link", (610, 143))
+    s.db(740, 105, 170, 90, "PostgreSQL", ["links schema"])
     s.arrow([(630, 330), (740, 330)], "1 lookup", (685, 323))
     s.db(740, 295, 170, 90, "Redis", ["cache-aside · TTL 1 h"])
     s.arrow([(615, 290), (615, 240), (825, 240), (825, 196)], dash=True,
@@ -680,17 +672,18 @@ def url_shortener():
     s.service(990, 470, 210, 100, "analytics-service",
               ["Spring Boot · batch @KafkaListener", "counts per link / minute", "GET /links/{code}/stats"])
     s.arrow([(1095, 570), (1095, 600)])
-    s.db(1020, 600, 150, 80, "stats DB", ["PostgreSQL"])
+    s.db(1020, 600, 150, 80, "PostgreSQL", ["stats schema (same server)"])
     s.arrow([(270, 390), (270, 712), (1240, 712), (1240, 520), (1201, 520)], dash=True,
             label="GET /links/{code}/stats", at=(700, 706))
 
     # memory panel
     x, y = 1290, 95
-    s.rect(x, y, 190, 300, "#FAFAFA", "#9E9E9E", rx=12, sw=1.4)
+    s.rect(x, y, 190, 380, "#FAFAFA", "#9E9E9E", rx=12, sw=1.4)
     s.text(x + 95, y + 30, "Remember", size=14, weight="bold")
     lines = [("Redirect now,", True), ("count later.", True), ("", False),
              ("Cache what's read,", True), ("stream what's written.", True), ("", False),
-             ("Kafka down?", False), ("Redirects still work.", False)]
+             ("Kafka down?", False), ("Redirects still work.", False), ("", False),
+             ("One service until", False), ("you need two.", False)]
     yy = y + 70
     for ln, bold in lines:
         if ln:
@@ -813,7 +806,7 @@ def seq_product_catalog():
               ("call", "gw", "eureka", "2. where is catalog-service?"),
               ("reply", "eureka", "gw", "10.1.0.7, 10.1.0.8"),
               ("call", "gw", "cat", "3. GET /products/42/page"),
-              ("note", "cat", "4. load product 42 from catalog DB"),
+              ("note", "cat", "4. load product 42 (catalog schema)"),
               ("call", "cat", "rev", "5. GET /reviews?productId=42 (1 s timeout)"),
               ("reply", "rev", "cat", "2 reviews by users 7 and 9"),
               ("call", "cat", "usr", "6. GET /users?ids=7,9"),
@@ -831,35 +824,35 @@ def seq_product_catalog():
 
 def seq_url_shortener():
     sequence("02-url-shortener-sequence.svg", "Project 2 · Flow: create, click, count",
-             "The redirect answers from cache right away · the click is counted later through Kafka",
-             [("user", "User", "user"), ("link", "link-service", "svc"), ("red", "redirect-service", "svc"),
-              ("redis", "Redis", "db", "cache"), ("pg", "PostgreSQL", "db", "links"),
+             "One service answers from cache right away · the click is counted later through Kafka",
+             [("user", "User", "user"), ("app", "shortener-service", "svc"),
+              ("redis", "Redis", "db", "cache"), ("pg", "PostgreSQL", "db", "links schema"),
               ("kafka", "Kafka", "kafka", "links.click.events"), ("ana", "analytics-service", "svc")],
              [("section", "info", "A · Create a short link"),
-              ("call", "user", "link", "1. POST /links {url}"),
-              ("call", "link", "pg", "2. save abc123 → url"),
-              ("reply", "link", "user", "201 {shortUrl: /abc123}"),
+              ("call", "user", "app", "1. POST /links {url}"),
+              ("call", "app", "pg", "2. save abc123 → url"),
+              ("reply", "app", "user", "201 {shortUrl: /abc123}"),
               ("end",),
               ("section", "info", "B · Click the link (hot path)"),
-              ("call", "user", "red", "3. GET /abc123"),
-              ("call", "red", "redis", "4. GET abc123"),
-              ("reply", "redis", "red", "hit: url"),
-              ("reply", "red", "user", "5. 302 Location: url"),
-              ("event", "red", "kafka", "6. LinkClicked (async, never waits)"),
+              ("call", "user", "app", "3. GET /abc123"),
+              ("call", "app", "redis", "4. GET abc123"),
+              ("reply", "redis", "app", "hit: url"),
+              ("reply", "app", "user", "5. 302 Location: url"),
+              ("event", "app", "kafka", "6. LinkClicked (async, never waits)"),
               ("event", "kafka", "ana", "7. batch of clicks"),
-              ("note", "ana", "8. clicks += n (stats DB)"),
+              ("note", "ana", "8. clicks += n (stats schema)"),
               ("end",),
               ("section", "alt", "IF the code is not in the cache (miss)"),
-              ("reply", "redis", "red", "miss"),
-              ("call", "red", "pg", "read abc123"),
-              ("reply", "pg", "red", "url"),
-              ("call", "red", "redis", "SET abc123 (TTL 1 h)"),
+              ("reply", "redis", "app", "miss"),
+              ("call", "app", "pg", "read abc123"),
+              ("reply", "pg", "app", "url"),
+              ("call", "app", "redis", "SET abc123 (TTL 1 h)"),
               ("end",),
               ("section", "info", "C · See the stats"),
               ("call", "user", "ana", "9. GET /links/abc123/stats"),
               ("reply", "ana", "user", "200 {clicks: 1}"),
               ("end",)],
-             col_w=195)
+             col_w=210)
 
 
 def seq_notification_hub():
@@ -897,9 +890,9 @@ def seq_notification_hub():
 
 def seq_order_saga():
     sequence("04-order-saga-sequence.svg", "Project 4 · Flow: place an order",
-             "Each service saves data + event in one DB transaction (outbox) · Debezium ships events to Kafka",
+             "Each service saves data + event in one DB transaction (outbox) · a polling relay publishes it to Kafka",
              [("cus", "Customer", "user"), ("ord", "order-service", "svc"),
-              ("kafka", "Kafka", "kafka", "via outbox + Debezium"),
+              ("kafka", "Kafka", "kafka", "via outbox relay"),
               ("pay", "payment-service", "svc"), ("inv", "inventory-service", "svc")],
              [("call", "cus", "ord", "1. POST /orders (Idempotency-Key)"),
               ("note", "ord", "2. one tx: order PENDING + outbox OrderCreated"),

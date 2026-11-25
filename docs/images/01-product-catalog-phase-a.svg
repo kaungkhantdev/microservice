@@ -54,21 +54,19 @@
 <text x="850" y="305" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">HTTP</text>
 <polyline points="830,380 880,478" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="850" y="440" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">HTTP</text>
-<polyline points="575,415 575,450" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M500,460 A75.0,10 0 0 1 650,460 V525 A75.0,10 0 0 1 500,525 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="575.0" cy="460" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="575.0" y="493.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">catalog DB</text>
-<text x="575.0" y="512.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
-<polyline points="1080,270 1120,270" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M1120,238 A75.0,10 0 0 1 1270,238 V303 A75.0,10 0 0 1 1120,303 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="1195.0" cy="238" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="1195.0" y="271.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">reviews DB</text>
-<text x="1195.0" y="290.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
-<polyline points="1080,480 1120,480" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
-<path d="M1120,448 A75.0,10 0 0 1 1270,448 V513 A75.0,10 0 0 1 1120,513 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
-<ellipse cx="1195.0" cy="448" rx="75.0" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
-<text x="1195.0" y="481.75" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">users DB</text>
-<text x="1195.0" y="500.25" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">PostgreSQL</text>
+<path d="M1115,235 A82.5,10 0 0 1 1280,235 V515 A82.5,10 0 0 1 1115,515 Z" fill="#E3F2FD" stroke="#1E88E5" stroke-width="2"/>
+<ellipse cx="1197.5" cy="235" rx="82.5" ry="10" fill="#BBDEFB" stroke="#1E88E5" stroke-width="2"/>
+<text x="1197.5" y="340.0" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#212121" text-anchor="middle">PostgreSQL</text>
+<text x="1197.5" y="358.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">one server</text>
+<text x="1197.5" y="373.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">schema per service:</text>
+<text x="1197.5" y="387.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">catalog</text>
+<text x="1197.5" y="402.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">reviews</text>
+<text x="1197.5" y="416.5" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">users</text>
+<text x="1197.5" y="431.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle">(own login each)</text>
+<polyline points="1080,270 1114,270" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="1080,480 1114,480" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<polyline points="575,415 575,545 1197,545 1197,526" fill="none" stroke="#455A64" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="700" y="539" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="middle" stroke="white" stroke-width="4" paint-order="stroke">catalog schema</text>
 <polyline points="300,325 300,145 470,145" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
 <text x="310" y="240" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#616161" text-anchor="start" stroke="white" stroke-width="4" paint-order="stroke">lookup</text>
 <polyline points="575,325 575,181" fill="none" stroke="#455A64" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow)" marker-start="url(#arrowStart)"/>

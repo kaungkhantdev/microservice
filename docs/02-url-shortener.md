@@ -15,7 +15,7 @@ Users create short links (`/abc123`). Opening one **redirects instantly** from a
 **Style:** hybrid. A **sync hot path** for redirects and an **async event path** for analytics.
 
 ```
-GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
+GET /abc123  →  shortener-service  →  Redis  →  302           (sync, fast)
                       └→  LinkClicked  →  Kafka  →  analytics  (async, later)
 ```
 
@@ -32,13 +32,26 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 
 | Service | Job |
 |---------|-----|
-| `link-service` | `POST /links` → generate a code → save to Postgres |
-| `redirect-service` | `GET /{code}` → Redis (or Postgres on a miss) → `302` + async click event. **Scales on its own (HPA).** |
+| `shortener-service` | `POST /links` → new code → Postgres. `GET /{code}` → Redis (Postgres on a miss) → `302` + async click event. Stateless, scaled by an HPA. |
 | `analytics-service` | Consume clicks → count per link and per minute → `GET /links/{code}/stats` |
 
 | Topic | Key | Holds |
 |-------|-----|-------|
 | `links.click.events` | `code` | One `LinkClicked` per redirect: code, time, country, device, referrer |
+
+## Why each piece exists
+
+> 🧠 Every piece must answer: **what breaks without me?**
+
+| Piece | What breaks without it |
+|-------|------------------------|
+| `shortener-service` | It's the product: create links and redirect. **One service**, because create and redirect share the same data and team. |
+| Redis | Every redirect hits Postgres, which gets slow and overloaded at 2,000/s. |
+| Kafka + `analytics-service` | Counting inside the redirect makes every click slower, and a stats outage would break redirects. |
+| HPA | A viral link overloads a fixed number of pods. |
+| One Postgres (`links` + `stats` schemas) | Each service owns its schema. A second server adds nothing at this size. |
+
+> 🌍 **When would you split redirect into its own service?** When the read path needs its own scaling, deploys or team, as big shorteners do. Until then, one service is simpler and just as fast.
 
 ## How it works
 
@@ -57,8 +70,7 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 
 | Service | Its story |
 |---------|-----------|
-| `link-service` | I create a unique code and save it. I never reuse a code. |
-| `redirect-service` | I answer from Redis, fall back to Postgres on a miss, and fire a click event **without waiting**. |
+| `shortener-service` | I create unique codes (never reused), and I answer redirects from Redis, falling back to Postgres on a miss. I fire a click event **without waiting**. |
 | `analytics-service` | I read clicks in batches and add them to the counts. A few seconds late is fine. |
 
 ### Flow: create, click, count
@@ -67,14 +79,14 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 
 **A · Create**
 1. The user sends `POST /links {url}`.
-2. `link-service` saves `abc123 → url` and returns the short URL.
+2. `shortener-service` saves `abc123 → url` and returns the short URL.
 
 **B · Click (hot path)**
 
 3. A visitor opens `/abc123`.
-4. `redirect-service` looks it up in Redis (a hit).
+4. `shortener-service` looks it up in Redis (a hit).
 5. The visitor gets `302` straight away.
-6. `redirect-service` fires `LinkClicked` to Kafka without waiting.
+6. `shortener-service` fires `LinkClicked` to Kafka without waiting.
 7. `analytics-service` reads a batch of clicks.
 8. It adds them to the counts.
 
@@ -86,7 +98,7 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 
 ## Scope
 
-- **Core:** create, redirect with a Redis cache, click events → total counts, HPA on `redirect-service`. Pass AT-1 to AT-4.
+- **Core:** create, redirect with a Redis cache, click events → total counts, HPA on `shortener-service`. Pass AT-1 to AT-4.
 - **Stretch:** custom aliases, expiry, per-country/device stats, time windows, live dashboard, stampede protection, exact counts.
 
 ## Spring Boot building blocks
@@ -101,7 +113,7 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 | Time windows | Kafka Streams `windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMinutes(1)))` |
 | Live dashboard | Server-Sent Events (`SseEmitter`) or WebSocket |
 | Rate limiting | Bucket4j + Redis on `POST /links` |
-| Autoscale | Kubernetes HPA (CPU) for `redirect-service`; KEDA (lag) for analytics |
+| Autoscale | Kubernetes HPA (CPU) for `shortener-service`; KEDA (lag) for analytics |
 | Load test | k6 |
 | Tests | Testcontainers: Redis, Kafka, PostgreSQL |
 
@@ -134,7 +146,7 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 | **NFR-3** | **Core** | Performance | **Cache first:** ≥ 95% cache hit rate under load (cache-aside, TTL 1 h). |
 | **NFR-4** | Stretch | Performance | **2,000 redirects/s** sustained on kind. |
 | **NFR-5** | Stretch | Performance | **Stampede-safe:** 1,000 concurrent requests for a cold link → only 1 DB query. |
-| **NFR-6** | **Core** | Scale | **Scale reads separately:** `redirect-service` has its own HPA (CPU 70%, 2–10 pods). |
+| **NFR-6** | **Core** | Scale | **Scale out:** `shortener-service` is stateless, with an HPA (CPU 70%, 2–10 pods). |
 | **NFR-7** | Stretch | Scale | **Analytics scales on lag** (KEDA). |
 | **NFR-8** | **Core** | Reliability | **Clicks are cheap but kept:** batching and compression, `acks=all`. No loss while Kafka is up. |
 | **NFR-9** | Stretch | Correctness | **Exact counts:** offsets saved with the counts, so a crash never double-counts. |
@@ -152,7 +164,7 @@ GET /abc123  →  redirect-service  →  Redis  →  302           (sync, fast)
 | AT-1 | **Core** | Create a link and open it | `302` to the right URL, and stats show 1 click within 5 s | FR-1, FR-2, FR-6, NFR-10 |
 | AT-2 | **Core** | k6: 1,000 redirects of one link | p95 < 20 ms, hit rate ≥ 95%, stats = 1,000 | NFR-1, NFR-3 |
 | AT-3 | **Core** | 🔌 Make Kafka unreachable, then redirect | Redirects still work at normal speed | NFR-2 |
-| AT-4 | **Core** | Ramp the load up, then down | HPA adds `redirect-service` pods, then removes them | NFR-6 |
+| AT-4 | **Core** | Ramp the load up, then down | HPA adds `shortener-service` pods, then removes them | NFR-6 |
 | AT-5 | Stretch | Kill analytics in the middle of a batch | Counts are still exact | NFR-9 |
 | AT-6 | Stretch | 1,000 concurrent hits on a cold link | Only 1 DB query | NFR-5 |
 | AT-7 | Stretch | One link gets 90% of all traffic | No single consumer falls far behind | NFR-11 |

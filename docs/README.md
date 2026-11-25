@@ -12,6 +12,8 @@ Five projects, from beginner to advanced. Start with **synchronous** microservic
 
 > 🧠 **Call → Mix → React → Coordinate → Remember.**
 
+> 🌍 **Real-world rule:** *add a piece only when a requirement forces it.* Every project has a **"Why each piece exists"** table answering *what breaks without it?*
+
 ## What each project teaches
 
 | # | Level | Main skills | Kubernetes | Core effort |
@@ -19,7 +21,7 @@ Five projects, from beginner to advanced. Start with **synchronous** microservic
 | 1 | Beginner → Intermediate | Eureka, Spring Cloud Gateway, Resilience4j, Config Server (no Kafka yet) | Services + DNS, Ingress, ConfigMaps | a weekend |
 | 2 | Intermediate | Redis caching, async Kafka producer, batch consumer, hot keys | Ingress, HPA, Redis | a weekend |
 | 3 | Intermediate | Consumer groups, keys, idempotency, DLQ | Deployments, ConfigMaps, probes, Strimzi | a weekend |
-| 4 | Upper-intermediate | Saga, outbox + Debezium, Schema Registry, retry topics | Helm, KEDA, PDBs, graceful shutdown | about a week |
+| 4 | Upper-intermediate | Saga, transactional outbox + relay, Schema Registry, retry topics (Debezium = stretch) | Helm, KEDA, PDBs, graceful shutdown | about a week |
 | 5 | Advanced | Event sourcing, replay, exactly-once, schema evolution | Argo CD, blue/green, NetworkPolicies, mTLS, ACLs | 1–2 weeks |
 
 ## Request-driven vs event-driven in one minute
@@ -42,7 +44,7 @@ Real systems use both: **synchronous at the edges, event-driven inside.**
 
 ## How to read a project doc
 
-Every doc has the same short layout: **motto → what you build → architecture style → architecture image → how it works (user stories + flow) → scope → Spring Boot → requirements → acceptance tests → testing**.
+Every doc has the same short layout: **motto → what you build → architecture style → architecture image → why each piece exists → how it works (user stories + flow) → scope → Spring Boot → requirements → acceptance tests → testing**.
 
 - **FR** = what the system *does*. **NFR** = how *well* it does it. **AT** = a test that proves both.
 - **Core** = build this first, end to end. **Stretch** = add later, one at a time.
@@ -52,7 +54,7 @@ Every doc has the same short layout: **motto → what you build → architecture
 | 1 | 14 requirements + 5 tests | 13 + 5 |
 | 2 | 13 requirements + 4 tests | 13 + 5 |
 | 3 | 15 requirements + 4 tests | 13 + 3 |
-| 4 | 13 requirements + 3 tests | 18 + 6 |
+| 4 | 13 requirements + 3 tests | 18 + 7 |
 | 5 | 11 requirements + 2 tests | 29 + 7 |
 
 ## Testing
@@ -66,6 +68,8 @@ Every project has **end-to-end scenarios** and a **k6 load test** in [`../testin
 **Event envelope** (every message): `eventId` · `eventType` · `eventVersion` · `occurredAt` · `correlationId` · `causationId` · `payload`
 
 **Topic names:** `<domain>.<entity>.<kind>`, e.g. `orders.order.events`, `notifications.email.commands`.
+
+**Databases:** one PostgreSQL server per project, **one schema + login per service**. That's "database per service" as most companies do it.
 
 **Kafka defaults:** 3 brokers (KRaft, Strimzi) · `replication.factor=3` · `min.insync.replicas=2` · producers `acks=all` + `enable.idempotence=true`.
 

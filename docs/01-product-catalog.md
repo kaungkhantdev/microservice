@@ -68,6 +68,19 @@ client  →  gateway  →  catalog-service  →  review-service
 | `discovery-server` | Eureka registry (**Phase A only**) |
 | `config-server` | Central config from Git (**Phase A only**) |
 
+## Why each piece exists
+
+> 🧠 Every piece must answer: **what breaks without me?**
+
+| Piece | What breaks without it |
+|-------|------------------------|
+| `api-gateway` | Clients must know every service's address, and every service repeats auth, CORS and rate limiting. |
+| Eureka (Phase A only) | Services need hard-coded IPs that break on every restart. On Kubernetes, DNS does this job, so it's deleted in Phase B. |
+| Resilience4j | One slow service hangs every page that calls it (cascading failure). |
+| 3 services | You can't practise service-to-service calls with one service. **Real world:** start with one app, and split by business capability or team, not by noun. |
+| **One Postgres, one schema per service** | Each service owns its tables, so the reviews team can change its schema without breaking the catalog. Separate servers would add cost and ops work with no benefit here. |
+| Config Server (stretch) | Only useful without Kubernetes. ConfigMaps replace it. |
+
 ## How it works
 
 ### User stories
@@ -97,7 +110,7 @@ client  →  gateway  →  catalog-service  →  review-service
 1. The user calls the gateway: `GET /api/catalog/products/42/page`.
 2. The gateway asks Eureka where `catalog-service` is.
 3. The gateway forwards the request.
-4. Catalog loads product 42 from its DB.
+4. Catalog loads product 42 from its own `catalog` schema.
 5. Catalog asks `review-service` for reviews (1 s timeout).
 6. Catalog asks `user-service` for the reviewers' names.
 7. Catalog merges everything.
